@@ -94,16 +94,16 @@ function FormDataProfesi({ data }: { data: DataProfesiPegawai }) {
 
 function FormDataPendidikan({ data }: { data: DataPendidikanPegawai }) {
   const fields = [
-    { label: 'Tingkat Pendidikan', value: data.tingkatPendidikan },
-    { label: 'Pendidikan', value: data.pendidikan },
-    { label: 'Tanggal Ijazah', value: data.tanggalIjazah },
-    { label: 'Tahun Lulus', value: data.tahunLulus },
-    { label: 'Nomor Ijazah', value: data.nomorIjazah },
-    { label: 'Nama Sekolah/PT', value: data.namaSekolah },
-    ...(data.gelarDepan    ? [{ label: 'Gelar Depan',    value: data.gelarDepan }]    : []),
-    ...(data.gelarBelakang ? [{ label: 'Gelar Belakang', value: data.gelarBelakang }] : []),
-    ...(data.namaJabatan   ? [{ label: 'Nama Jabatan',   value: data.namaJabatan }]   : []),
-    ...(data.lokasiIjazah  ? [{ label: 'Lokasi Ijazah',  value: data.lokasiIjazah }]  : []),
+    { label: 'Nama', value: data.nama },
+    { label: 'NIP', value: data.nip },
+    { label: 'Golongan', value: data.golongan },
+    { label: 'Jabatan', value: data.jabatan },
+    { label: 'Unit Kerja', value: data.unitKerja },
+    { label: 'Sponsor', value: data.sponsor },
+    { label: 'Jurusan', value: data.jurusan },
+    { label: 'Program Studi', value: data.programStudi },
+    { label: 'Nama Universitas', value: data.namaUniversitas },
+    ...(data.namaJabatan ? [{ label: 'Nama Jabatan', value: data.namaJabatan }] : []),
   ]
   return <FieldGrid fields={fields} />
 }

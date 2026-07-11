@@ -1,5 +1,6 @@
 'use client'
 
+import { DatePicker } from '@/components/form/date-picker'
 import { FileUpload } from '@/components/form/file-upload'
 import { daftarSKPegawai, type SKPegawai } from '@/data/sk-data'
 import {
@@ -21,21 +22,30 @@ function UploadSheet({
 }: {
   pegawai: SKPegawai | null
   onClose: () => void
-  onSave: (id: string, data: { nomorSK: string; nomorST?: string; file: File | null }) => void
+  onSave: (id: string, data: { nomorSK: string; tanggalSK: string; nomorST?: string; tanggalST?: string; masaTugas?: string; tmtSelesai?: string; file: File | null; filePerjanjian: File | null; fileST: File | null }) => void
 }) {
-  const [nomorSK, setNomorSK] = useState(pegawai?.nomorSK ?? '')
-  const [nomorST, setNomorST] = useState(pegawai?.nomorST ?? '')
-  const [file, setFile]       = useState<File | null>(null)
-  const [done, setDone]       = useState(false)
+  const [nomorSK, setNomorSK]     = useState(pegawai?.nomorSK ?? '')
+  const [tanggalSK, setTanggalSK] = useState(pegawai?.tanggalSK ?? '')
+  const [nomorST, setNomorST]     = useState(pegawai?.nomorST ?? '')
+  const [masaTugas, setMasaTugas]   = useState('')
+  const [tmtSelesai, setTmtSelesai] = useState(pegawai?.tmtSelesai ?? '')
+  const [file, setFile]                   = useState<File | null>(null)
+  const [filePerjanjian, setFilePerjanjian] = useState<File | null>(null)
+  const [fileST, setFileST]               = useState<File | null>(null)
+  const [tanggalST, setTanggalST]         = useState(pegawai?.tanggalST ?? '')
+  const [done, setDone]                   = useState(false)
 
   if (!pegawai) return null
 
-  const isTUBEL = pegawai.jenis === 'TUBEL'
-  const canSave = nomorSK.trim().length >= 3 && file
+  const isTUBEL   = pegawai.jenis === 'TUBEL'
+  const isMandiri = pegawai.layanan === 'TUBEL Mandiri'
+  const canSave = isMandiri
+    ? nomorST.trim().length >= 3
+    : nomorSK.trim().length >= 3 && tanggalSK && file
 
   const handleSave = () => {
     if (!canSave) return
-    onSave(pegawai.id, { nomorSK, nomorST, file })
+    onSave(pegawai.id, { nomorSK, tanggalSK, nomorST, tanggalST, masaTugas, tmtSelesai, file, filePerjanjian, fileST })
     setDone(true)
   }
 
@@ -97,43 +107,79 @@ function UploadSheet({
                       </div>
                     </div>
 
-                    {/* Nomor SK */}
-                    <div>
-                      <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
-                        Nomor SK <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="KEP/001/BKN/2026"
-                        value={nomorSK}
-                        onChange={e => setNomorSK(e.target.value.toUpperCase())}
-                        className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm uppercase text-slate-700 placeholder-slate-400 outline-none transition focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-500"
-                      />
-                    </div>
-
-                    {/* Nomor ST — TUBEL only */}
-                    {isTUBEL && (
-                      <div>
-                        <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
-                          Nomor ST Tugas Belajar <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="ST/001/TUBEL/BKN/2026"
-                          value={nomorST}
-                          onChange={e => setNomorST(e.target.value.toUpperCase())}
-                          className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm uppercase text-slate-700 placeholder-slate-400 outline-none transition focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-500"
-                        />
-                      </div>
+                    {/* Nomor SK, Tanggal SK, TMT Selesai, Upload SK, Upload Surat Perjanjian — bukan TUBEL Mandiri */}
+                    {!isMandiri && (
+                      <>
+                        <div>
+                          <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                            Nomor SK <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="KEP/001/BKN/2026"
+                            value={nomorSK}
+                            onChange={e => setNomorSK(e.target.value.toUpperCase())}
+                            className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm uppercase text-slate-700 placeholder-slate-400 outline-none transition focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                            Tanggal SK <span className="text-red-500">*</span>
+                          </label>
+                          <DatePicker value={tanggalSK} onChange={setTanggalSK} placeholder="Pilih tanggal SK" />
+                        </div>
+                        {isTUBEL && (
+                          <div>
+                            <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                              TMT Selesai
+                            </label>
+                            <DatePicker value={tmtSelesai} onChange={setTmtSelesai} placeholder="Pilih TMT selesai" />
+                          </div>
+                        )}
+                        <div>
+                          <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                            Upload SK <span className="text-red-500">*</span>
+                          </label>
+                          <FileUpload label="" value={file} onChange={setFile} />
+                        </div>
+                        <div>
+                          <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                            Upload Surat Perjanjian
+                          </label>
+                          <FileUpload label="" value={filePerjanjian} onChange={setFilePerjanjian} />
+                        </div>
+                      </>
                     )}
 
-                    {/* Upload SK */}
-                    <div>
-                      <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
-                        Upload SK <span className="text-red-500">*</span>
-                      </label>
-                      <FileUpload label="" required value={file} onChange={setFile} />
-                    </div>
+                    {/* Nomor ST + Tanggal ST + Upload ST — TUBEL Mandiri only */}
+                    {isMandiri && (
+                      <>
+                        <div>
+                          <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                            Nomor ST Tugas Belajar <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="ST/001/TUBEL/BKN/2026"
+                            value={nomorST}
+                            onChange={e => setNomorST(e.target.value.toUpperCase())}
+                            className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm uppercase text-slate-700 placeholder-slate-400 outline-none transition focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                            Tanggal ST
+                          </label>
+                          <DatePicker value={tanggalST} onChange={setTanggalST} placeholder="Pilih tanggal ST" />
+                        </div>
+                        <div>
+                          <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                            Upload ST Tugas Belajar
+                          </label>
+                          <FileUpload label="" value={fileST} onChange={setFileST} />
+                        </div>
+                      </>
+                    )}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -180,9 +226,9 @@ export default function SKPegawaiPage() {
     sudah: data.filter(p => p.status === 'sudah').length,
   }
 
-  const handleSave = (id: string, saved: { nomorSK: string; nomorST?: string; file: File | null }) => {
+  const handleSave = (id: string, saved: { nomorSK: string; tanggalSK: string; nomorST?: string; tanggalST?: string; masaTugas?: string; tmtSelesai?: string; file: File | null; filePerjanjian: File | null; fileST: File | null }) => {
     setData(prev => prev.map(p => p.id === id
-      ? { ...p, nomorSK: saved.nomorSK, nomorST: saved.nomorST, fileSK: saved.file?.name, status: 'sudah' }
+      ? { ...p, nomorSK: saved.nomorSK, tanggalSK: saved.tanggalSK, nomorST: saved.nomorST, tanggalST: saved.tanggalST, masaTugas: saved.masaTugas, tmtSelesai: saved.tmtSelesai, fileSK: saved.file?.name, filePerjanjian: saved.filePerjanjian?.name, fileST: saved.fileST?.name, status: 'sudah' }
       : p
     ))
   }
@@ -279,7 +325,7 @@ export default function SKPegawaiPage() {
                     <p className="mt-0.5 truncate text-xs text-slate-400">{p.nip} · {p.kode}</p>
                     {p.status === 'sudah' && p.nomorSK && (
                       <p className="truncate text-[11px] text-slate-400">
-                        SK: {p.nomorSK}{p.nomorST ? ` · ST: ${p.nomorST}` : ''}
+                        SK: {p.nomorSK}{p.tanggalSK ? ` · ${p.tanggalSK}` : ''}{p.nomorST ? ` · ST: ${p.nomorST}` : ''}
                       </p>
                     )}
                   </div>

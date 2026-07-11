@@ -11,8 +11,14 @@ export interface SKPegawai {
   jenis: JenisSK
   tanggalPengajuan: string
   nomorSK?: string
+  tanggalSK?: string
   nomorST?: string
+  masaTugas?: string
+  tmtSelesai?: string
   fileSK?: string
+  filePerjanjian?: string
+  fileST?: string
+  tanggalST?: string
   status: 'belum' | 'sudah'
 }
 

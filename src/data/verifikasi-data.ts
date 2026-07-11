@@ -19,16 +19,16 @@ export interface DataProfesiPegawai {
 }
 
 export interface DataPendidikanPegawai {
-  tingkatPendidikan: string
-  pendidikan: string
-  tanggalIjazah: string
-  tahunLulus: string
-  nomorIjazah: string
-  namaSekolah: string
-  gelarDepan?: string
-  gelarBelakang?: string
+  nama: string
+  nip: string
+  golongan: string
+  jabatan: string
+  unitKerja: string
+  sponsor: string
+  jurusan: string
+  programStudi: string
+  namaUniversitas: string
   namaJabatan?: string
-  lokasiIjazah?: string
 }
 
 export interface PegawaiPengajuan {
@@ -111,9 +111,9 @@ export const daftarPengajuan: PengajuanVerifikasi[] = [
       {
         nama: 'Budi Santoso', nip: '199002202012011003', jabatan: 'Auditor', unit: 'Inspektorat',
         formData: {
-          tingkatPendidikan: 'S-2', pendidikan: 'S-2 ILMU AKUNTANSI', tanggalIjazah: '15 Agustus 2020',
-          tahunLulus: '2020', nomorIjazah: '001002601012020100003', namaSekolah: 'UNIVERSITAS GADJAH MADA',
-          gelarBelakang: 'M.AK', lokasiIjazah: 'YOGYAKARTA - YOGYAKARTA',
+          nama: 'BUDI SANTOSO', nip: '199002202012011003', golongan: 'III/B', jabatan: 'AUDITOR',
+          unitKerja: 'INSPEKTORAT', sponsor: 'PEMERINTAH', jurusan: 'ILMU AKUNTANSI',
+          programStudi: 'S-2', namaUniversitas: 'UNIVERSITAS GADJAH MADA',
         } as DataPendidikanPegawai,
         dokumen: [
           { nama: 'Surat Permohonan Pribadi', file: 'permohonan_budi.pdf', ukuran: '0.3 MB' },
@@ -137,9 +137,9 @@ export const daftarPengajuan: PengajuanVerifikasi[] = [
       {
         nama: 'Dewi Kusuma', nip: '198811102013012004', jabatan: 'Arsiparis', unit: 'Biro Umum',
         formData: {
-          tingkatPendidikan: 'S-2', pendidikan: 'S-2 MANAJEMEN KEARSIPAN', tanggalIjazah: '20 September 2022',
-          tahunLulus: '2022', nomorIjazah: '001002601022022100004', namaSekolah: 'UNIVERSITAS INDONESIA',
-          lokasiIjazah: 'JAKARTA - JAKARTA',
+          nama: 'DEWI KUSUMA', nip: '198811102013012004', golongan: 'III/C', jabatan: 'ARSIPARIS',
+          unitKerja: 'BIRO UMUM', sponsor: 'PEMERINTAH', jurusan: 'MANAJEMEN KEARSIPAN',
+          programStudi: 'S-2', namaUniversitas: 'UNIVERSITAS INDONESIA',
         } as DataPendidikanPegawai,
         dokumen: [
           { nama: 'SKP 2 Tahun Terakhir', file: 'skp_dewi.pdf', ukuran: '0.7 MB' },
@@ -153,9 +153,9 @@ export const daftarPengajuan: PengajuanVerifikasi[] = [
       {
         nama: 'Eko Prasetyo', nip: '199205182014011005', jabatan: 'Perencana', unit: 'Biro Perencanaan',
         formData: {
-          tingkatPendidikan: 'S-2', pendidikan: 'S-2 PERENCANAAN PEMBANGUNAN', tanggalIjazah: '10 Oktober 2023',
-          tahunLulus: '2023', nomorIjazah: '001002601052023100005', namaSekolah: 'UNIVERSITAS BRAWIJAYA',
-          lokasiIjazah: 'MALANG - JAWA TIMUR',
+          nama: 'EKO PRASETYO', nip: '199205182014011005', golongan: 'III/A', jabatan: 'PERENCANA',
+          unitKerja: 'BIRO PERENCANAAN', sponsor: 'PEMERINTAH', jurusan: 'PERENCANAAN PEMBANGUNAN',
+          programStudi: 'S-2', namaUniversitas: 'UNIVERSITAS BRAWIJAYA',
         } as DataPendidikanPegawai,
         dokumen: [
           { nama: 'SKP 2 Tahun Terakhir', file: 'skp_eko.pdf', ukuran: '0.6 MB' },
@@ -169,9 +169,9 @@ export const daftarPengajuan: PengajuanVerifikasi[] = [
       {
         nama: 'Fitri Handayani', nip: '198604252015012006', jabatan: 'Analis SDM', unit: 'Biro Kepegawaian',
         formData: {
-          tingkatPendidikan: 'S-2', pendidikan: 'S-2 MANAJEMEN SDM', tanggalIjazah: '05 Juli 2021',
-          tahunLulus: '2021', nomorIjazah: '001002601062021100006', namaSekolah: 'UNIVERSITAS PADJADJARAN',
-          lokasiIjazah: 'BANDUNG - JAWA BARAT',
+          nama: 'FITRI HANDAYANI', nip: '198604252015012006', golongan: 'III/B', jabatan: 'ANALIS SDM',
+          unitKerja: 'BIRO KEPEGAWAIAN', sponsor: 'PEMERINTAH', jurusan: 'MANAJEMEN SDM',
+          programStudi: 'S-2', namaUniversitas: 'UNIVERSITAS PADJADJARAN',
         } as DataPendidikanPegawai,
         dokumen: [
           { nama: 'SKP 2 Tahun Terakhir', file: 'skp_fitri.pdf', ukuran: '0.7 MB' },
@@ -195,9 +195,9 @@ export const daftarPengajuan: PengajuanVerifikasi[] = [
       {
         nama: 'Galih Permana', nip: '199108302016011007', jabatan: 'Pranata Humas', unit: 'Biro Humas',
         formData: {
-          tingkatPendidikan: 'S-2', pendidikan: 'S-2 ILMU KOMUNIKASI', tanggalIjazah: '12 Maret 2024',
-          tahunLulus: '2024', nomorIjazah: '001002601072024100007', namaSekolah: 'UNIVERSITAS DIPONEGORO',
-          lokasiIjazah: 'SEMARANG - JAWA TENGAH',
+          nama: 'GALIH PERMANA', nip: '199108302016011007', golongan: 'III/A', jabatan: 'PRANATA HUMAS',
+          unitKerja: 'BIRO HUMAS', sponsor: 'MANDIRI', jurusan: 'ILMU KOMUNIKASI',
+          programStudi: 'S-2', namaUniversitas: 'UNIVERSITAS DIPONEGORO',
         } as DataPendidikanPegawai,
         dokumen: [
           { nama: 'Surat Permohonan Pribadi', file: 'permohonan_galih.pdf', ukuran: '0.3 MB' },

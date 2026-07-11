@@ -30,18 +30,21 @@ interface CheckItem {
 
 function buildChecks(data: Props['data']): CheckItem[] {
   const nomorValid = /^[A-Z0-9][A-Z0-9/.\-]*$/.test(data.nomorSurat.trim()) && data.nomorSurat.trim().length >= 3
+  const isPWK = data.layanan === 'PWK'
   return [
     {
       label: 'Layanan dipilih',
-      detail: data.layanan ? `Layanan: ${data.layanan}` : 'Belum memilih layanan (IPG / TUBEL)',
+      detail: data.layanan ? `Layanan: ${data.layanan}` : 'Belum memilih layanan (IPG / TUBEL / PWK)',
       valid: !!data.layanan,
     },
     {
       label: 'Jenis layanan dipilih',
-      detail: data.subLayanan
+      detail: isPWK
+        ? 'PWK tidak memerlukan sub-layanan'
+        : data.subLayanan
         ? `Jenis: ${data.subLayanan}`
         : `Belum memilih jenis ${data.layanan || 'layanan'}`,
-      valid: !!data.subLayanan,
+      valid: isPWK ? true : !!data.subLayanan,
     },
     {
       label: 'Nomor Surat Entri',
@@ -122,7 +125,10 @@ export function KonfirmasiDialog({ open, onClose, data }: Props) {
         kode,
         nips: data.pegawai.map(p => p.nip).join(','),
       })
-      router.push(`/formdatapegawai?${params.toString()}`)
+      const dest = data.layanan === 'PWK'
+        ? `/formkelengkapan?${params.toString()}`
+        : `/formdatapegawai?${params.toString()}`
+      router.push(dest)
     }, 3000)
     return () => { clearInterval(interval); clearTimeout(redirectTimer) }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -259,7 +265,10 @@ export function KonfirmasiDialog({ open, onClose, data }: Props) {
                         type="button"
                         onClick={() => {
                           const params = new URLSearchParams({ layanan: data.layanan, subLayanan: data.subLayanan, kode, nips: data.pegawai.map(p => p.nip).join(',') })
-                          router.push(`/formdatapegawai?${params.toString()}`)
+                          const dest = data.layanan === 'PWK'
+                            ? `/formkelengkapan?${params.toString()}`
+                            : `/formdatapegawai?${params.toString()}`
+                          router.push(dest)
                         }}
                         className="w-full rounded-xl bg-emerald-500 py-3 text-sm font-semibold text-white transition hover:bg-emerald-400"
                       >

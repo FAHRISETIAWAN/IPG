@@ -6,7 +6,7 @@ import type { Pegawai } from '@/data/pegawai-data'
 import { ChevronRightIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react'
 
-type Layanan = 'IPG' | 'TUBEL' | ''
+type Layanan = 'IPG' | 'TUBEL' | 'PWK' | ''
 type SubLayananIPG = 'Profesi' | 'Sertifikasi' | 'Akademik' | ''
 type SubLayananTUBEL = 'Mandiri' | 'Beasiswa' | ''
 
@@ -55,7 +55,7 @@ export default function FormPermintaanPage() {
     setShowKonfirmasi(true)
   }
 
-  const subLayanan = layanan === 'IPG' ? subIPG : subTUBEL
+  const subLayanan = layanan === 'IPG' ? subIPG : layanan === 'TUBEL' ? subTUBEL : ''
 
   return (
     <>
@@ -108,6 +108,7 @@ export default function FormPermintaanPage() {
               <div className="flex gap-3">
                 <RadioCard label="IPG" checked={layanan === 'IPG'} onClick={() => handleLayanan('IPG')} />
                 <RadioCard label="TUBEL" checked={layanan === 'TUBEL'} onClick={() => handleLayanan('TUBEL')} />
+                <RadioCard label="PWK" checked={layanan === 'PWK'} onClick={() => handleLayanan('PWK')} />
               </div>
             </div>
 

@@ -25,7 +25,7 @@ const DOCS_IPG_SERTIFIKASI: DocField[] = [
   { key: 'skp',       label: 'SKP 2 Tahun Terakhir',              required: true, note: 'Minimal bernilai Baik' },
   { key: 'pangkat',   label: 'SK Pangkat dan SK Jabatan Terakhir', required: true },
   { key: 'sk_pns',    label: 'SK PNS dan SK CPNS',                required: true },
-  { key: 'sertif',    label: 'Sertifikat / Bukti Pendaftaran',    required: true },
+  { key: 'sertif',    label: 'Ijazah',                            required: true },
   { key: 'transkrip', label: 'Transkrip Nilai',                   required: true },
 ]
 
@@ -54,12 +54,21 @@ const DOCS_TUBEL_BEASISWA: DocField[] = [
   { key: 'skp',         label: 'SKP 2 Tahun Terakhir',                            required: true,  note: 'Minimal bernilai Baik' },
   { key: 'bebas_hukdis',label: 'Surat Bebas Hukdis',                             required: true,  note: 'Dari Kakanwil / Kabiro SDM untuk PNS Pusat' },
   { key: 'pengantar',   label: 'Surat Usulan Pengantar dari Kanwil',             required: true,  note: 'Tertulis jelas nama univ, prodi, dan waktu mulai kuliah' },
-  { key: 'mhs',         label: 'Surat Keterangan Mahasiswa',                      required: false, note: 'Jika sudah aktif sebagai mahasiswa untuk pegawai tubel biaya mandiri' },
   { key: 'loa',         label: 'LOA (Letter of Acceptance)',                      required: true,  note: 'Beasiswa' },
   { key: 'pernyataan',  label: 'Surat Pernyataan dan Perjanjian Tugas Belajar',  required: true,  note: 'Beasiswa' },
 ]
 
+const DOCS_PWK: DocField[] = [
+  { key: 'rekomendasi',    label: 'Rekomendasi Pimpinan',               required: true },
+  { key: 'analisis',       label: 'Analisis Rekomendasi Pimpinan',       required: true },
+  { key: 'bebas_hukdis',   label: 'Surat Bebas Hukdis',                 required: true },
+  { key: 'bebas_tunggakan',label: 'Surat Bebas Tunggakan Pekerjaan',     required: true },
+  { key: 'permohonan',     label: 'Surat Permohonan Pribadi',            required: true },
+  { key: 'eviden',         label: 'Surat Eviden Alasan Perpindahan',     required: true },
+]
+
 function getDocs(layanan: string, subLayanan: string): DocField[] {
+  if (layanan === 'PWK') return DOCS_PWK
   if (layanan === 'TUBEL') {
     return subLayanan === 'Beasiswa' ? DOCS_TUBEL_BEASISWA : DOCS_TUBEL_MANDIRI
   }
@@ -194,7 +203,7 @@ function FormKelengkapanContent() {
       <div className="mb-5 flex flex-wrap items-center justify-between gap-2">
         <div>
           <h1 className="text-base font-semibold text-slate-800 dark:text-slate-100">Kelengkapan Dokumen</h1>
-          <p className="mt-0.5 text-sm text-slate-400">{kode} · {layanan} {subLayanan}</p>
+          <p className="mt-0.5 text-sm text-slate-400">{kode} · {layanan}{subLayanan ? ` ${subLayanan}` : ''}</p>
         </div>
         <span className="text-sm text-slate-500 dark:text-slate-400">
           Pegawai <span className="font-semibold text-slate-800 dark:text-slate-100">{step + 1}</span> dari <span className="font-semibold text-slate-800 dark:text-slate-100">{list.length}</span>
@@ -272,7 +281,7 @@ function FormKelengkapanContent() {
           {/* Upload fields */}
           <div className="grid grid-cols-1 gap-5 px-6 py-6 sm:grid-cols-2">
             {docs.map((doc, idx) => {
-              const isFullWidth = doc.key === 'permohonan' || doc.key === 'pengantar'
+              const isFullWidth = layanan !== 'PWK' && (doc.key === 'permohonan' || doc.key === 'pengantar')
               const isLastOdd   = docs.length % 2 !== 0 && idx === docs.length - 1
               return (
               <div key={doc.key} className={isFullWidth || isLastOdd ? 'sm:col-span-2' : ''}>

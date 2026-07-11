@@ -18,6 +18,7 @@ const PAGE_LABELS: Record<string, string> = {
   '/laporan': 'Laporan Pengajuan',
   '/pegawai': 'Manajemen Pegawai',
   '/sk': 'SK Pegawai',
+  '/perpanjangan': 'Perpanjangan TUBEL Beasiswa',
 }
 
 export function DashboardTopbar() {

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import {
+  ArrowPathIcon,
   ChartBarIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -16,6 +17,7 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/24/outline'
 import {
+  ArrowPathIcon as ArrowPathSolid,
   ChartBarIcon as ChartBarSolid,
   ClipboardDocumentCheckIcon as ClipboardCheckSolid,
   ClipboardDocumentListIcon as ClipboardSolid,
@@ -30,6 +32,7 @@ const navItems = [
   { label: 'Form Permintaan', href: '/formpermintaan', icon: ClipboardDocumentListIcon,  iconActive: ClipboardSolid },
   { label: 'Verifikasi',      href: '/verifikasi',     icon: ClipboardDocumentCheckIcon, iconActive: ClipboardCheckSolid },
   { label: 'SK Pegawai',      href: '/sk',             icon: DocumentCheckIcon,          iconActive: DocumentCheckSolid },
+  { label: 'Perpanjangan',    href: '/perpanjangan',   icon: ArrowPathIcon,              iconActive: ArrowPathSolid },
   { label: 'Laporan',         href: '/laporan',        icon: ChartBarIcon,               iconActive: ChartBarSolid },
   { label: 'Pegawai',         href: '/pegawai',        icon: UserGroupIcon,              iconActive: UserGroupSolid },
 ]

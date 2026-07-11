@@ -11,16 +11,16 @@ import { Suspense, useState } from 'react'
 
 // ── Types ──────────────────────────────────────────────────────────────────
 interface DataPendidikan {
-  tingkatPendidikan: string
-  pendidikan: string
-  tanggalIjazah: string
-  tahunLulus: string
-  nomorIjazah: string
-  namaSekolah: string
-  gelarDepan: string
-  gelarBelakang: string
+  nama: string
+  nip: string
+  golongan: string
+  jabatan: string
+  unitKerja: string
+  sponsor: string
+  jurusan: string
+  programStudi: string
+  namaUniversitas: string
   namaJabatan: string
-  lokasiIjazah: string
 }
 
 interface DataProfesi {
@@ -31,18 +31,21 @@ interface DataProfesi {
   gelarDepanProfesi: string
   gelarBelakangProfesi: string
   lembagaPenyelenggara: string
+  fakultas: string
+  nomorIjazahProfesi: string
+  tahunLulusProfesi: string
+  tanggalIjazahProfesi: string
   jenisProfesi: string
 }
 
 const emptyPendidikan = (): DataPendidikan => ({
-  tingkatPendidikan: '', pendidikan: '', tanggalIjazah: '', tahunLulus: '',
-  nomorIjazah: '', namaSekolah: '', gelarDepan: '', gelarBelakang: '',
-  namaJabatan: '', lokasiIjazah: '',
+  nama: '', nip: '', golongan: '', jabatan: '', unitKerja: '',
+  sponsor: '', jurusan: '', programStudi: '', namaUniversitas: '', namaJabatan: '',
 })
 
 const emptyProfesi = (): DataProfesi => ({
   klasifikasiProfesi: '', namaProfesi: '', nomorSertifikat: '', tanggalTerbit: '',
-  gelarDepanProfesi: '', gelarBelakangProfesi: '', lembagaPenyelenggara: '', jenisProfesi: '',
+  gelarDepanProfesi: '', gelarBelakangProfesi: '', lembagaPenyelenggara: '', fakultas: '', nomorIjazahProfesi: '', tahunLulusProfesi: '', tanggalIjazahProfesi: '', jenisProfesi: '',
 })
 
 const tingkatOptions  = ['SD', 'SMP', 'SMA/SMK', 'D-1', 'D-2', 'D-3', 'D-4', 'S-1', 'S-2', 'S-3']
@@ -120,7 +123,27 @@ function FormIPG({ data, update }: { data: DataProfesi; update: (k: keyof DataPr
       <Field label="Lembaga Penyelenggara" required>
         <TextInput placeholder="Universitas Sumatera Utara" value={data.lembagaPenyelenggara} onChange={v => update('lembagaPenyelenggara', v)} />
       </Field>
-      <Field label="Jenis Profesi" required>
+      <Field label="Fakultas">
+        <TextInput placeholder="Fakultas Ekonomi dan Bisnis" value={data.fakultas} onChange={v => update('fakultas', v)} />
+      </Field>
+      <Field label="Nomor Ijazah">
+        <TextInput placeholder="001002601012026100004" value={data.nomorIjazahProfesi} onChange={v => update('nomorIjazahProfesi', v)} />
+      </Field>
+      <Field label="Tahun Lulus">
+        <input
+          type="text"
+          inputMode="numeric"
+          maxLength={4}
+          placeholder="2026"
+          value={data.tahunLulusProfesi}
+          onChange={e => update('tahunLulusProfesi', e.target.value.replace(/\D/g, '').slice(0, 4))}
+          className="h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 placeholder-slate-400 outline-none transition focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-500"
+        />
+      </Field>
+      <Field label="Tanggal Ijazah">
+        <DatePicker value={data.tanggalIjazahProfesi} onChange={v => update('tanggalIjazahProfesi', v)} placeholder="Pilih tanggal ijazah" />
+      </Field>
+      <Field label="Jenis Profesi">
         <Dropdown value={data.jenisProfesi} onChange={v => update('jenisProfesi', v)}
           options={jenisProfesiOptions} placeholder="Pilih jenis profesi" />
       </Field>
@@ -128,36 +151,42 @@ function FormIPG({ data, update }: { data: DataProfesi; update: (k: keyof DataPr
   )
 }
 
+const programStudiOptions = ['S-1', 'S-2', 'S-3']
+
 // ── Form TUBEL/IPG Akademik (Pendidikan) ───────────────────────────────────
 function FormPendidikan({ data, update, showJabatan = true }: { data: DataPendidikan; update: (k: keyof DataPendidikan, v: string) => void; showJabatan?: boolean }) {
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-      <Field label="Tingkat Pendidikan" required>
-        <Dropdown value={data.tingkatPendidikan} onChange={v => update('tingkatPendidikan', v)}
-          options={tingkatOptions} placeholder="Pilih tingkat pendidikan" />
+      <Field label="Nama" required>
+        <TextInput placeholder="Ahmad Fauzi" value={data.nama} onChange={v => update('nama', v)} />
       </Field>
-      <Field label="Pendidikan" required>
-        <TextInput placeholder="S-2 ILMU EKONOMI" value={data.pendidikan} onChange={v => update('pendidikan', v)} />
+      <Field label="NIP" required>
+        <TextInput placeholder="198501012010011001" value={data.nip} onChange={v => update('nip', v)} />
       </Field>
-      <Field label="Tanggal Dikeluarkannya Ijazah" required>
-        <DatePicker value={data.tanggalIjazah} onChange={v => update('tanggalIjazah', v)} placeholder="Pilih tanggal ijazah" />
+      <Field label="Golongan" required>
+        <TextInput placeholder="III/C" value={data.golongan} onChange={v => update('golongan', v)} />
       </Field>
-      <Field label="Tahun Lulus" required>
-        <Dropdown value={data.tahunLulus} onChange={v => update('tahunLulus', v)}
-          options={tahunOptions} placeholder="Pilih tahun" />
+      <Field label="Jabatan" required>
+        <TextInput placeholder="Analis Kebijakan" value={data.jabatan} onChange={v => update('jabatan', v)} />
       </Field>
-      <Field label="Nomor Ijazah" required>
-        <TextInput placeholder="001002601012026100004" value={data.nomorIjazah} onChange={v => update('nomorIjazah', v)} />
+      <Field label="Unit Kerja" required>
+        <TextInput placeholder="Biro Perencanaan" value={data.unitKerja} onChange={v => update('unitKerja', v)} />
       </Field>
-      <Field label="Nama Sekolah/Perguruan Tinggi" required>
-        <TextInput placeholder="UNIVERSITAS INDONESIA" value={data.namaSekolah} onChange={v => update('namaSekolah', v)} />
+      <Field label="Sponsor" required>
+        <TextInput placeholder="Pemerintah / Mandiri" value={data.sponsor} onChange={v => update('sponsor', v)} />
       </Field>
-      <Field label="Gelar Depan">
-        <TextInput placeholder="Dr." value={data.gelarDepan} onChange={v => update('gelarDepan', v)} />
+      <Field label="Jurusan" required>
+        <TextInput placeholder="Ilmu Ekonomi" value={data.jurusan} onChange={v => update('jurusan', v)} />
       </Field>
-      <Field label="Gelar Belakang">
-        <TextInput placeholder="M.Sc." value={data.gelarBelakang} onChange={v => update('gelarBelakang', v)} />
+      <Field label="Program Studi" required>
+        <Dropdown value={data.programStudi} onChange={v => update('programStudi', v)}
+          options={programStudiOptions} placeholder="Pilih program studi" />
       </Field>
+      <div className="sm:col-span-2">
+        <Field label="Nama Universitas" required>
+          <TextInput placeholder="Universitas Indonesia" value={data.namaUniversitas} onChange={v => update('namaUniversitas', v)} />
+        </Field>
+      </div>
       {showJabatan && (
         <div className="sm:col-span-2">
           <Field label="Nama Jabatan Kepegawaian Eselon 1 atau 2">
@@ -165,11 +194,6 @@ function FormPendidikan({ data, update, showJabatan = true }: { data: DataPendid
           </Field>
         </div>
       )}
-      <div className="sm:col-span-2">
-        <Field label="Lokasi Dikeluarkannya Ijazah">
-          <TextInput placeholder="JAKARTA - JAKARTA" value={data.lokasiIjazah} onChange={v => update('lokasiIjazah', v)} />
-        </Field>
-      </div>
     </div>
   )
 }
@@ -213,7 +237,7 @@ function FormContent() {
     setPendidikanData(prev => { const n = [...prev]; n[step] = { ...n[step], [k]: v }; return n })
 
   const isValidProfesi   = (d: DataProfesi)    => !!(d.klasifikasiProfesi && d.namaProfesi && d.nomorSertifikat && d.tanggalTerbit && d.lembagaPenyelenggara && d.jenisProfesi)
-  const isValidPendidikan = (d: DataPendidikan) => !!(d.tingkatPendidikan && d.pendidikan && d.tanggalIjazah && d.tahunLulus && d.nomorIjazah && d.namaSekolah)
+  const isValidPendidikan = (d: DataPendidikan) => !!(d.nama && d.nip && d.golongan && d.jabatan && d.unitKerja && d.jurusan && d.programStudi && d.namaUniversitas)
 
   const isCurrentValid = isIPGProfesiOrSertif
     ? isValidProfesi(currentProfesi)
