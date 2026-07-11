@@ -11,8 +11,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s - IPG Clinic',
-    default: 'IPG Clinic',
+    template: '%s - Layanan Pegawai',
+    default: 'Layanan Pegawai',
   },
   description: 'Sistem Manajemen Izin Pengembangan dan Tugas Belajar Aparatur Sipil Negara.',
   keywords: ['IPG', 'TUBEL', 'ASN', 'BKN', 'Izin Pengembangan', 'Tugas Belajar'],

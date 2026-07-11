@@ -11,6 +11,7 @@ import {
   ClipboardDocumentCheckIcon,
   ClipboardDocumentListIcon,
   Cog6ToothIcon,
+  DocumentCheckIcon,
   HomeIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline'
@@ -19,6 +20,7 @@ import {
   ClipboardDocumentCheckIcon as ClipboardCheckSolid,
   ClipboardDocumentListIcon as ClipboardSolid,
   Cog6ToothIcon as CogSolid,
+  DocumentCheckIcon as DocumentCheckSolid,
   HomeIcon as HomeSolid,
   UserGroupIcon as UserGroupSolid,
 } from '@heroicons/react/24/solid'
@@ -27,6 +29,7 @@ const navItems = [
   { label: 'Dashboard',       href: '/dashboard',      icon: HomeIcon,                   iconActive: HomeSolid },
   { label: 'Form Permintaan', href: '/formpermintaan', icon: ClipboardDocumentListIcon,  iconActive: ClipboardSolid },
   { label: 'Verifikasi',      href: '/verifikasi',     icon: ClipboardDocumentCheckIcon, iconActive: ClipboardCheckSolid },
+  { label: 'SK Pegawai',      href: '/sk',             icon: DocumentCheckIcon,          iconActive: DocumentCheckSolid },
   { label: 'Laporan',         href: '/laporan',        icon: ChartBarIcon,               iconActive: ChartBarSolid },
   { label: 'Pegawai',         href: '/pegawai',        icon: UserGroupIcon,              iconActive: UserGroupSolid },
 ]
@@ -58,7 +61,7 @@ export function DashboardSidebar() {
             <span className="text-sm font-bold text-white">IP</span>
           </div>
           {!collapsed && (
-            <span className="text-sm font-bold text-slate-800 dark:text-slate-100">IPG Clinic</span>
+            <span className="text-sm font-bold text-slate-800 dark:text-slate-100">Layanan Pegawai</span>
           )}
         </div>
 

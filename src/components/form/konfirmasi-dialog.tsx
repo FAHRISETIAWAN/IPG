@@ -29,7 +29,7 @@ interface CheckItem {
 }
 
 function buildChecks(data: Props['data']): CheckItem[] {
-  const nomorValid = /^[A-Z]\/\d+\/[\w.]+\/\d{4}$/.test(data.nomorSurat.trim())
+  const nomorValid = /^[A-Z0-9][A-Z0-9/.\-]*$/.test(data.nomorSurat.trim()) && data.nomorSurat.trim().length >= 3
   return [
     {
       label: 'Layanan dipilih',
@@ -48,7 +48,7 @@ function buildChecks(data: Props['data']): CheckItem[] {
       detail: nomorValid
         ? data.nomorSurat
         : data.nomorSurat.trim()
-        ? 'Format tidak valid (contoh: B/1234/KP.02.03/2025)'
+        ? 'Format tidak valid (gunakan huruf, angka, dan /)'
         : 'Nomor surat belum diisi',
       valid: nomorValid,
     },

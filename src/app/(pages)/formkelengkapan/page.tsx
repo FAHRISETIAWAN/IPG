@@ -15,27 +15,26 @@ import { Suspense, useState } from 'react'
 interface DocField { key: string; label: string; required: boolean; note?: string }
 
 const DOCS_IPG_PROFESI: DocField[] = [
-  { key: 'skp',       label: 'SKP 2 Tahun Terakhir',            required: true,  note: 'Minimal bernilai Baik' },
-  { key: 'pangkat',   label: 'SK Pangkat dan SK Jabatan Terakhir', required: true },
-  { key: 'sk_pns',    label: 'SK PNS dan SK CPNS',               required: true },
-  { key: 'ijazah',    label: 'Ijazah Terakhir',                  required: true },
-  { key: 'transkrip', label: 'Transkrip Nilai',                  required: true },
+  { key: 'skp',     label: 'SKP 2 Tahun Terakhir',              required: true, note: 'Minimal bernilai Baik' },
+  { key: 'pangkat', label: 'SK Pangkat dan SK Jabatan Terakhir', required: true },
+  { key: 'sk_pns',  label: 'SK PNS dan SK CPNS',                required: true },
+  { key: 'ijazah',  label: 'Ijazah Terakhir',                   required: true },
 ]
 
 const DOCS_IPG_SERTIFIKASI: DocField[] = [
-  { key: 'skp',       label: 'SKP 2 Tahun Terakhir',            required: true,  note: 'Minimal bernilai Baik' },
+  { key: 'skp',       label: 'SKP 2 Tahun Terakhir',              required: true, note: 'Minimal bernilai Baik' },
   { key: 'pangkat',   label: 'SK Pangkat dan SK Jabatan Terakhir', required: true },
-  { key: 'sk_pns',    label: 'SK PNS dan SK CPNS',               required: true },
-  { key: 'sertif',    label: 'Sertifikat / Bukti Pendaftaran',   required: true },
+  { key: 'sk_pns',    label: 'SK PNS dan SK CPNS',                required: true },
+  { key: 'sertif',    label: 'Sertifikat / Bukti Pendaftaran',    required: true },
+  { key: 'transkrip', label: 'Transkrip Nilai',                   required: true },
 ]
 
 const DOCS_IPG_AKADEMIK: DocField[] = [
-  { key: 'skp',       label: 'SKP 2 Tahun Terakhir',            required: true,  note: 'Minimal bernilai Baik' },
-  { key: 'pangkat',   label: 'SK Pangkat dan SK Jabatan Terakhir', required: true },
-  { key: 'sk_pns',    label: 'SK PNS dan SK CPNS',               required: true },
-  { key: 'ijazah',    label: 'Ijazah Terakhir',                  required: true },
-  { key: 'transkrip', label: 'Transkrip Nilai',                  required: true },
-  { key: 'proposal',  label: 'Proposal Studi / Rencana Akademik',required: true },
+  { key: 'skp',      label: 'SKP 2 Tahun Terakhir',              required: true, note: 'Minimal bernilai Baik' },
+  { key: 'pangkat',  label: 'SK Pangkat dan SK Jabatan Terakhir', required: true },
+  { key: 'sk_pns',   label: 'SK PNS dan SK CPNS',                required: true },
+  { key: 'ijazah',   label: 'Ijazah Terakhir',                   required: true },
+  { key: 'proposal', label: 'Proposal Studi / Rencana Akademik', required: true },
 ]
 
 const DOCS_TUBEL_MANDIRI: DocField[] = [
@@ -235,10 +234,10 @@ function FormKelengkapanContent() {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.2 }}
-          className="rounded-2xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"
+          className="rounded-2xl bg-white dark:bg-slate-900"
         >
           {/* Card header */}
-          <div className="flex flex-col gap-4 border-b border-slate-100 px-6 py-4 dark:border-slate-700 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-4 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-400">
                 {current.nama.split(' ').map(n => n[0]).slice(0, 2).join('')}
@@ -292,7 +291,7 @@ function FormKelengkapanContent() {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between border-t border-slate-100 px-6 py-4 dark:border-slate-700">
+          <div className="flex items-center justify-between px-6 py-4">
             <button
               type="button"
               onClick={() => step > 0 ? setStep(step - 1) : router.back()}

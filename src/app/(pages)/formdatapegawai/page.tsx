@@ -129,7 +129,7 @@ function FormIPG({ data, update }: { data: DataProfesi; update: (k: keyof DataPr
 }
 
 // ── Form TUBEL/IPG Akademik (Pendidikan) ───────────────────────────────────
-function FormPendidikan({ data, update }: { data: DataPendidikan; update: (k: keyof DataPendidikan, v: string) => void }) {
+function FormPendidikan({ data, update, showJabatan = true }: { data: DataPendidikan; update: (k: keyof DataPendidikan, v: string) => void; showJabatan?: boolean }) {
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
       <Field label="Tingkat Pendidikan" required>
@@ -158,11 +158,13 @@ function FormPendidikan({ data, update }: { data: DataPendidikan; update: (k: ke
       <Field label="Gelar Belakang">
         <TextInput placeholder="M.Sc." value={data.gelarBelakang} onChange={v => update('gelarBelakang', v)} />
       </Field>
-      <div className="sm:col-span-2">
-        <Field label="Nama Jabatan Kepegawaian Eselon 1 atau 2">
-          <TextInput placeholder="Kepala Biro Sumber Daya Manusia" value={data.namaJabatan} onChange={v => update('namaJabatan', v)} />
-        </Field>
-      </div>
+      {showJabatan && (
+        <div className="sm:col-span-2">
+          <Field label="Nama Jabatan Kepegawaian Eselon 1 atau 2">
+            <TextInput placeholder="Kepala Biro Sumber Daya Manusia" value={data.namaJabatan} onChange={v => update('namaJabatan', v)} />
+          </Field>
+        </div>
+      )}
       <div className="sm:col-span-2">
         <Field label="Lokasi Dikeluarkannya Ijazah">
           <TextInput placeholder="JAKARTA - JAKARTA" value={data.lokasiIjazah} onChange={v => update('lokasiIjazah', v)} />
@@ -286,10 +288,10 @@ function FormContent() {
       <AnimatePresence mode="wait">
         <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.2 }}
-          className="rounded-2xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"
+          className="rounded-2xl bg-white dark:bg-slate-900"
         >
           {/* Card header */}
-          <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4 dark:border-slate-700">
+          <div className="flex items-center justify-between px-6 py-4">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-400">
                 {current.nama.split(' ').map(n => n[0]).slice(0, 2).join('')}
@@ -308,12 +310,12 @@ function FormContent() {
           <div className="px-6 py-6">
             {isIPGProfesiOrSertif
               ? <FormIPG data={currentProfesi} update={updateProfesi} />
-              : <FormPendidikan data={currentPendidikan} update={updatePendidikan} />
+              : <FormPendidikan data={currentPendidikan} update={updatePendidikan} showJabatan={layanan !== 'TUBEL'} />
             }
           </div>
 
           {/* Card footer */}
-          <div className="flex items-center justify-between border-t border-slate-100 px-6 py-4 dark:border-slate-700">
+          <div className="flex items-center justify-between px-6 py-4">
             <button type="button"
               onClick={() => step > 0 ? setStep(step - 1) : router.push('/formpermintaan')}
               className="rounded-xl border border-slate-200 bg-white px-5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 dark:border-slate-600 dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800"

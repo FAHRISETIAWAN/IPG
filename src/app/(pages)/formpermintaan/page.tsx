@@ -73,9 +73,9 @@ export default function FormPermintaanPage() {
       </nav>
 
       <form onSubmit={handleSubmit} className="w-full">
-        <div className="rounded-2xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
+        <div className="rounded-2xl bg-white dark:bg-slate-900">
           {/* Card header */}
-          <div className="border-b border-slate-100 px-6 py-5 dark:border-slate-700">
+          <div className="px-6 py-5">
             <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">Informasi Permintaan</h2>
             <p className="mt-0.5 text-sm text-slate-400">Lengkapi data permintaan layanan di bawah ini</p>
           </div>
@@ -83,7 +83,24 @@ export default function FormPermintaanPage() {
           {/* Card body */}
           <div className="space-y-6 px-6 py-6">
 
-            {/* 1. Pilih Layanan */}
+            {/* 1. Nomor Surat Entri */}
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                Nomor Surat Entri <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="B/1234/KP.02.03/2025"
+                value={nomorSurat}
+                onChange={(e) => setNomorSurat(e.target.value.toUpperCase())}
+                className="h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm uppercase text-slate-700 placeholder-slate-400 outline-none transition focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-500"
+              />
+            </div>
+
+            {/* Divider */}
+            <div className="border-t border-slate-100 dark:border-slate-700" />
+
+            {/* 2. Pilih Layanan */}
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">
                 Pilih Layanan <span className="text-red-500">*</span>
@@ -94,7 +111,7 @@ export default function FormPermintaanPage() {
               </div>
             </div>
 
-            {/* 2. Sub layanan — conditional */}
+            {/* 3. Sub layanan — conditional */}
             {layanan === 'IPG' && (
               <div>
                 <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">
@@ -102,12 +119,7 @@ export default function FormPermintaanPage() {
                 </label>
                 <div className="grid grid-cols-3 gap-3">
                   {SUB_IPG.map((item) => (
-                    <RadioCard
-                      key={item}
-                      label={item}
-                      checked={subIPG === item}
-                      onClick={() => setSubIPG(item)}
-                    />
+                    <RadioCard key={item} label={item} checked={subIPG === item} onClick={() => setSubIPG(item)} />
                   ))}
                 </div>
               </div>
@@ -120,12 +132,7 @@ export default function FormPermintaanPage() {
                 </label>
                 <div className="flex gap-3">
                   {SUB_TUBEL.map((item) => (
-                    <RadioCard
-                      key={item}
-                      label={item}
-                      checked={subTUBEL === item}
-                      onClick={() => setSubTUBEL(item)}
-                    />
+                    <RadioCard key={item} label={item} checked={subTUBEL === item} onClick={() => setSubTUBEL(item)} />
                   ))}
                 </div>
               </div>
@@ -134,38 +141,21 @@ export default function FormPermintaanPage() {
             {/* Divider */}
             <div className="border-t border-slate-100 dark:border-slate-700" />
 
-            {/* 3. Grid inputs */}
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              {/* Nomor Surat Entri */}
-              <div className="sm:col-span-2">
-                <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
-                  Nomor Surat Entri <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="B/1234/KP.02.03/2025"
-                  value={nomorSurat}
-                  onChange={(e) => setNomorSurat(e.target.value.toUpperCase())}
-                  className="h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm uppercase text-slate-700 placeholder-slate-400 outline-none transition focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-500"
-                />
-              </div>
-
-              {/* Nama Pegawai — multi select */}
-              <div className="sm:col-span-2">
-                <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
-                  Nama Pegawai <span className="text-red-500">*</span>
-                </label>
-                <p className="mb-2 text-xs text-slate-400 dark:text-slate-500">
-                  Dapat memilih lebih dari satu pegawai. Cari berdasarkan NIP atau nama.
-                </p>
-                <PegawaiMultiSelect value={pegawai} onChange={setPegawai} />
-              </div>
+            {/* 4. Nama Pegawai */}
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                Nama Pegawai <span className="text-red-500">*</span>
+              </label>
+              <p className="mb-2 text-xs text-slate-400 dark:text-slate-500">
+                Dapat memilih lebih dari satu pegawai. Cari berdasarkan NIP atau nama.
+              </p>
+              <PegawaiMultiSelect value={pegawai} onChange={setPegawai} />
             </div>
 
           </div>
 
           {/* Card footer — actions */}
-          <div className="flex items-center gap-3 border-t border-slate-100 px-6 py-4 dark:border-slate-700">
+          <div className="flex items-center gap-3 px-6 py-4">
             <button
               type="submit"
               className="rounded-lg bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

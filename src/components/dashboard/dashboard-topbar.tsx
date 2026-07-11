@@ -17,6 +17,7 @@ const PAGE_LABELS: Record<string, string> = {
   '/verifikasi': 'Verifikasi Pengajuan',
   '/laporan': 'Laporan Pengajuan',
   '/pegawai': 'Manajemen Pegawai',
+  '/sk': 'SK Pegawai',
 }
 
 export function DashboardTopbar() {
@@ -31,8 +32,6 @@ export function DashboardTopbar() {
           <span className="text-xs font-bold text-white">IP</span>
         </div>
         <div className="flex items-center gap-2 text-sm">
-          <span className="hidden text-slate-400 dark:text-slate-500 sm:inline">IPG Clinic</span>
-          <span className="hidden text-slate-300 dark:text-slate-600 sm:inline">/</span>
           <span className="font-medium text-slate-800 dark:text-slate-200">{pageLabel}</span>
         </div>
       </div>

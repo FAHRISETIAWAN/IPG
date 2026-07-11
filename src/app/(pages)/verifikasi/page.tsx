@@ -3,10 +3,11 @@
 import { DetailSheet } from '@/components/verifikasi/detail-sheet'
 import { daftarPengajuan, type PengajuanVerifikasi } from '@/data/verifikasi-data'
 import {
-  BriefcaseIcon,
   AcademicCapIcon,
-  MagnifyingGlassIcon,
+  BriefcaseIcon,
+  ChevronRightIcon,
   ClipboardDocumentCheckIcon,
+  MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline'
 import { useState } from 'react'
 
@@ -28,51 +29,53 @@ export default function VerifikasiPage() {
     )
   })
 
-  const handleVerifikasi = (id: string) => {
-    setData((prev) => prev.filter((item) => item.id !== id))
-  }
-
-  const handleTolak = (id: string) => {
-    setData((prev) => prev.filter((item) => item.id !== id))
-  }
+  const handleVerifikasi = (id: string) => setData((prev) => prev.filter((item) => item.id !== id))
+  const handleTolak      = (id: string) => setData((prev) => prev.filter((item) => item.id !== id))
 
   return (
     <>
-      <div className="flex h-full flex-col overflow-hidden">
-        {/* Page header */}
-        <div className="shrink-0 border-b border-slate-200 bg-white px-4 py-4 dark:border-slate-700 dark:bg-slate-800 sm:px-6">
-          <h1 className="text-lg font-bold text-slate-800 dark:text-slate-100">Verifikasi Pengajuan</h1>
-          <p className="mt-0.5 text-sm text-slate-400">Daftar pengajuan yang menunggu verifikasi</p>
+      <div className="min-h-screen bg-slate-50 px-4 py-8 dark:bg-slate-950 sm:px-6 lg:px-10">
+        {/* Breadcrumb */}
+        <nav className="mb-6 flex items-center gap-1.5 text-xs text-slate-400">
+          <span className="cursor-pointer hover:text-slate-600 dark:hover:text-slate-300">Dashboard</span>
+          <ChevronRightIcon className="h-3.5 w-3.5" />
+          <span className="font-medium text-slate-700 dark:text-slate-200">Verifikasi Pengajuan</span>
+        </nav>
 
-          {/* Search */}
-          <div className="relative mt-4 w-full sm:w-72">
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-            <input
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Cari kode, pegawai, NIP..."
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-4 text-sm text-slate-700 outline-none transition focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-200 dark:placeholder-slate-400"
-            />
-          </div>
-        </div>
-
-        {/* List */}
-        <div className="flex-1 overflow-y-auto bg-white px-4 py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden dark:bg-slate-800 sm:px-6">
-          {filtered.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <ClipboardDocumentCheckIcon className="mb-3 h-10 w-10 text-slate-300 dark:text-slate-600" />
-              <p className="text-sm font-medium text-slate-500">Tidak ada pengajuan yang menunggu verifikasi</p>
-              <p className="text-xs text-slate-400">Semua pengajuan sudah diproses</p>
+        <div className="rounded-2xl bg-white dark:bg-slate-900">
+          {/* Card header */}
+          <div className="flex flex-col gap-3 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">Verifikasi Pengajuan</h2>
+              <p className="mt-0.5 text-sm text-slate-400">Daftar pengajuan yang menunggu verifikasi</p>
             </div>
-          ) : (
-            <div className="divide-y divide-slate-100 dark:divide-slate-700/50">
-              {filtered.map((item) => {
+            <div className="relative w-full sm:w-72">
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Cari kode, pegawai, NIP..."
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-9 pr-4 text-sm text-slate-700 outline-none transition focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-400"
+              />
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="border-t border-slate-100 dark:border-slate-700" />
+
+          {/* List */}
+          <div className="divide-y divide-slate-100 px-6 dark:divide-slate-700/50">
+            {filtered.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <ClipboardDocumentCheckIcon className="mb-3 h-10 w-10 text-slate-300 dark:text-slate-600" />
+                <p className="text-sm font-medium text-slate-500">Tidak ada pengajuan yang menunggu verifikasi</p>
+                <p className="text-xs text-slate-400">Semua pengajuan sudah diproses</p>
+              </div>
+            ) : (
+              filtered.map((item) => {
                 const isIPG = item.layanan.startsWith('IPG')
                 return (
-                  <div
-                    key={item.id}
-                    className="flex items-center gap-4 px-0 py-4 transition hover:bg-slate-50 dark:hover:bg-slate-700/20 sm:px-1"
-                  >
+                  <div key={item.id} className="flex items-center gap-4 py-4">
                     <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
                       isIPG
                         ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-400'
@@ -99,15 +102,20 @@ export default function VerifikasiPage() {
 
                     <button
                       onClick={() => setSelectedItem(item)}
-                      className="shrink-0 rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2 text-xs font-semibold text-indigo-600 transition hover:bg-indigo-100 dark:border-indigo-800/50 dark:bg-indigo-900/20 dark:text-indigo-400 dark:hover:bg-indigo-900/30"
+                      className="shrink-0 rounded-lg border border-indigo-200 bg-indigo-50 px-4 py-2 text-xs font-semibold text-indigo-600 transition hover:bg-indigo-100 dark:border-indigo-800/50 dark:bg-indigo-900/20 dark:text-indigo-400"
                     >
                       Detail
                     </button>
                   </div>
                 )
-              })}
-            </div>
-          )}
+              })
+            )}
+          </div>
+
+          {/* Card footer */}
+          <div className="px-6 py-4">
+            <p className="text-xs text-slate-400">Menampilkan {filtered.length} pengajuan</p>
+          </div>
         </div>
       </div>
 
