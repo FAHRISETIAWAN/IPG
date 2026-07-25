@@ -6,6 +6,7 @@ import {
   type PegawaiRole,
   type Role,
 } from '@/data/pegawai-role-data'
+import { DropdownSelect } from '@/components/form/dropdown-select'
 import {
   ChevronRightIcon,
   MagnifyingGlassIcon,
@@ -16,14 +17,16 @@ import {
 import { AnimatePresence, motion } from 'framer-motion'
 import { useState } from 'react'
 
-const ROLES: Role[] = ['admin', 'verifikator_ipg', 'verifikator_tubel']
+const ROLES: Role[] = ['admin', 'verifikator_ipg', 'verifikator_tubel', 'verifikator_pwk', 'verifikator_ujikom']
 
 const filterTabs: { key: Role | 'semua'; label: string }[] = [
-  { key: 'semua',             label: 'Semua' },
-  { key: 'admin',             label: 'Admin' },
-  { key: 'verifikator_ipg',   label: 'Verifikator IPG' },
-  { key: 'verifikator_tubel', label: 'Verifikator TUBEL' },
-  { key: 'pegawai',           label: 'Pegawai' },
+  { key: 'semua',               label: 'Semua' },
+  { key: 'admin',               label: 'Admin' },
+  { key: 'verifikator_ipg',     label: 'Verifikator IPG' },
+  { key: 'verifikator_tubel',   label: 'Verifikator TUBEL' },
+  { key: 'verifikator_pwk',     label: 'Verifikator PWK' },
+  { key: 'verifikator_ujikom',  label: 'Verifikator UjiKom' },
+  { key: 'pegawai',             label: 'Pegawai' },
 ]
 
 // ── Edit Role Sheet ────────────────────────────────────────────────────────
@@ -161,6 +164,8 @@ export default function PegawaiPage() {
     { role: 'admin'              as Role, count: data.filter(p => p.role === 'admin').length },
     { role: 'verifikator_ipg'   as Role, count: data.filter(p => p.role === 'verifikator_ipg').length },
     { role: 'verifikator_tubel' as Role, count: data.filter(p => p.role === 'verifikator_tubel').length },
+    { role: 'verifikator_pwk'   as Role, count: data.filter(p => p.role === 'verifikator_pwk').length },
+    { role: 'verifikator_ujikom'as Role, count: data.filter(p => p.role === 'verifikator_ujikom').length },
     { role: 'pegawai'            as Role, count: data.filter(p => p.role === 'pegawai').length },
   ]
 
@@ -181,46 +186,21 @@ export default function PegawaiPage() {
             <p className="mt-0.5 text-sm text-slate-400">Kelola hak akses dan role pengguna sistem</p>
           </div>
 
-          {/* Summary cards */}
-          <div className="grid grid-cols-2 gap-2 px-6 pb-4 sm:grid-cols-4">
-            {summary.map(({ role, count }) => {
-              const cfg = ROLE_CONFIG[role]
-              return (
-                <button key={role} onClick={() => setActiveFilter(role)}
-                  className={`flex items-center gap-2.5 rounded-xl border-2 px-3 py-3 text-left transition ${
-                    activeFilter === role
-                      ? 'border-indigo-600 bg-indigo-50 dark:border-indigo-500 dark:bg-indigo-900/30'
-                      : 'border-slate-200 bg-white hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800/50'
-                  }`}
-                >
-                  <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold ${cfg.bg} ${cfg.text}`}>
-                    {count}
-                  </span>
-                  <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{cfg.label}</span>
-                </button>
-              )
-            })}
-          </div>
-
-          {/* Filter pills + Search */}
+          {/* Filter select + Search */}
           <div className="flex flex-col gap-3 px-6 pb-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {filterTabs.map(tab => (
-                <button key={tab.key} onClick={() => setActiveFilter(tab.key as Role | 'semua')}
-                  className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition ${
-                    activeFilter === tab.key
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300'
-                  }`}
-                >
-                  {tab.label}
-                  <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
-                    activeFilter === tab.key ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600 dark:bg-slate-600 dark:text-slate-300'
-                  }`}>
-                    {counts[tab.key] ?? 0}
-                  </span>
-                </button>
-              ))}
+            <div className="w-full sm:w-52">
+              <DropdownSelect
+                value={activeFilter}
+                onChange={v => setActiveFilter(v as Role | 'semua')}
+                options={[
+                  { value: 'semua', label: `Semua (${data.length})` },
+                  ...summary.map(({ role, count }) => ({
+                    value: role,
+                    label: `${ROLE_CONFIG[role].label} (${count})`,
+                  })),
+                ]}
+                placeholder="Filter role..."
+              />
             </div>
             <div className="relative w-full sm:w-60">
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />

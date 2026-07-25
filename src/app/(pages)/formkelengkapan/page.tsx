@@ -58,6 +58,18 @@ const DOCS_TUBEL_BEASISWA: DocField[] = [
   { key: 'pernyataan',  label: 'Surat Pernyataan dan Perjanjian Tugas Belajar',  required: true,  note: 'Beasiswa' },
 ]
 
+const DOCS_UJIKOM: DocField[] = [
+  { key: 'skp',            label: 'SKP',                      required: true },
+  { key: 'sk_jabatan',     label: 'SK Jabatan Terakhir',      required: true },
+  { key: 'pangkat',        label: 'Pangkat Terakhir',         required: true },
+  { key: 'pns',            label: 'SK PNS',                   required: true },
+  { key: 'cpns',           label: 'SK CPNS',                  required: true },
+  { key: 'pak',            label: 'PAK',                      required: true },
+  { key: 'bebas_hukdis',   label: 'Pernyataan Bebas Hukdis',  required: true },
+  { key: 'rekomendasi',    label: 'Rekomendasi Pimpinan',     required: true },
+  { key: 'penempatan',     label: 'Rekomendasi Penempatan',   required: true },
+]
+
 const DOCS_PWK: DocField[] = [
   { key: 'rekomendasi',    label: 'Rekomendasi Pimpinan',               required: true },
   { key: 'analisis',       label: 'Analisis Rekomendasi Pimpinan',       required: true },
@@ -68,7 +80,8 @@ const DOCS_PWK: DocField[] = [
 ]
 
 function getDocs(layanan: string, subLayanan: string): DocField[] {
-  if (layanan === 'PWK') return DOCS_PWK
+  if (layanan === 'PWK')    return DOCS_PWK
+  if (layanan === 'UJIKOM') return DOCS_UJIKOM
   if (layanan === 'TUBEL') {
     return subLayanan === 'Beasiswa' ? DOCS_TUBEL_BEASISWA : DOCS_TUBEL_MANDIRI
   }
@@ -139,12 +152,13 @@ function SuccessModal({ kode, layanan, subLayanan, totalDok, onDashboard }: {
 
 // ── Main Content ───────────────────────────────────────────────────────────
 function FormKelengkapanContent() {
-  const params     = useSearchParams()
-  const router     = useRouter()
-  const layanan    = params.get('layanan') ?? ''
-  const subLayanan = params.get('subLayanan') ?? ''
-  const kode       = params.get('kode') ?? '-'
-  const nips       = (params.get('nips') ?? '').split(',').filter(Boolean)
+  const params           = useSearchParams()
+  const router           = useRouter()
+  const layanan          = params.get('layanan') ?? ''
+  const subLayanan       = params.get('subLayanan') ?? ''
+  const kode             = params.get('kode') ?? '-'
+  const nips             = (params.get('nips') ?? '').split(',').filter(Boolean)
+  const jenisList = (params.get('jenisList') ?? '').split(',').filter(Boolean)
 
   const pegawaiList = nips
     .map(nip => daftarPegawai.find(p => p.nip === nip))
@@ -153,16 +167,23 @@ function FormKelengkapanContent() {
   // fallback: jika tidak ada pegawai dari URL, buat satu slot kosong
   const list = pegawaiList.length > 0 ? pegawaiList : [{ nip: '-', nama: 'Pegawai', jabatan: '', unit: '' }]
 
-  const docs = getDocs(layanan, subLayanan)
+  const getDocsForStep = (idx: number): DocField[] => {
+    const base = getDocs(layanan, subLayanan)
+    if (layanan === 'UJIKOM' && jenisList[idx] === 'struktural_ke_jf') {
+      return [...base, { key: 'lepas_jabatan', label: 'Surat Pernyataan Lepas Jabatan', required: true }]
+    }
+    return base
+  }
 
   const [step, setStep]       = useState(0)
   const [submitted, setSubmitted] = useState(false)
 
   // files per pegawai: array of Record<key, File|null>
   const [allFiles, setAllFiles] = useState<Record<string, File | null>[]>(
-    list.map(() => Object.fromEntries(docs.map(d => [d.key, null])))
+    list.map((_, i) => Object.fromEntries(getDocsForStep(i).map(d => [d.key, null])))
   )
 
+  const docs         = getDocsForStep(step)
   const currentFiles = allFiles[step]
   const setFile = (key: string, file: File | null) => {
     setAllFiles(prev => {
@@ -173,7 +194,8 @@ function FormKelengkapanContent() {
   }
 
   const uploadedCount  = (f: Record<string, File | null>) => Object.values(f).filter(Boolean).length
-  const isComplete     = (f: Record<string, File | null>) => docs.every(d => !d.required || f[d.key])
+  const isComplete     = (f: Record<string, File | null>, idx: number) =>
+    getDocsForStep(idx).every(d => !d.required || f[d.key])
   const totalDokumen   = allFiles.reduce((s, f) => s + uploadedCount(f), 0)
   const isLast         = step === list.length - 1
 
@@ -220,12 +242,12 @@ function FormKelengkapanContent() {
               className={`flex shrink-0 items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-medium transition ${
                 i === step
                   ? 'bg-indigo-600 text-white'
-                  : isComplete(allFiles[i])
+                  : isComplete(allFiles[i], i)
                   ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
                   : 'bg-white text-slate-600 ring-1 ring-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:ring-slate-700'
               }`}
             >
-              {isComplete(allFiles[i]) && i !== step
+              {isComplete(allFiles[i], i) && i !== step
                 ? <CheckCircleIcon className="h-3.5 w-3.5" />
                 : <span className="flex h-4 w-4 items-center justify-center rounded-full bg-white/20 text-[10px] font-bold">{i + 1}</span>
               }
@@ -273,7 +295,7 @@ function FormKelengkapanContent() {
                     strokeLinecap="round"
                   />
                 </svg>
-                {isComplete(currentFiles) && <CheckCircleIcon className="absolute inset-0 m-auto h-5 w-5 text-indigo-500" />}
+                {isComplete(currentFiles, step) && <CheckCircleIcon className="absolute inset-0 m-auto h-5 w-5 text-indigo-500" />}
               </div>
             </div>
           </div>
@@ -281,7 +303,7 @@ function FormKelengkapanContent() {
           {/* Upload fields */}
           <div className="grid grid-cols-1 gap-5 px-6 py-6 sm:grid-cols-2">
             {docs.map((doc, idx) => {
-              const isFullWidth = layanan !== 'PWK' && (doc.key === 'permohonan' || doc.key === 'pengantar')
+              const isFullWidth = layanan !== 'PWK' && layanan !== 'UJIKOM' && (doc.key === 'permohonan' || doc.key === 'pengantar')
               const isLastOdd   = docs.length % 2 !== 0 && idx === docs.length - 1
               return (
               <div key={doc.key} className={isFullWidth || isLastOdd ? 'sm:col-span-2' : ''}>
@@ -312,7 +334,7 @@ function FormKelengkapanContent() {
             <button
               type="button"
               onClick={handleNext}
-              disabled={!isComplete(currentFiles)}
+              disabled={!isComplete(currentFiles, step)}
               className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
             >
               {isLast ? (
@@ -329,12 +351,12 @@ function FormKelengkapanContent() {
       <div className="mt-4">
         <div className="mb-1 flex items-center justify-between text-xs text-slate-400">
           <span>Progress keseluruhan</span>
-          <span>{allFiles.filter(isComplete).length} / {list.length} pegawai selesai</span>
+          <span>{allFiles.filter((f, i) => isComplete(f, i)).length} / {list.length} pegawai selesai</span>
         </div>
         <div className="h-1.5 w-full rounded-full bg-slate-200 dark:bg-slate-700">
           <motion.div
             className="h-1.5 rounded-full bg-indigo-600"
-            animate={{ width: `${(allFiles.filter(isComplete).length / list.length) * 100}%` }}
+            animate={{ width: `${(allFiles.filter((f, i) => isComplete(f, i)).length / list.length) * 100}%` }}
             transition={{ duration: 0.4 }}
           />
         </div>

@@ -4,10 +4,13 @@ import { DetailSheet } from '@/components/verifikasi/detail-sheet'
 import { daftarPengajuan, type PengajuanVerifikasi } from '@/data/verifikasi-data'
 import {
   AcademicCapIcon,
+  ArrowsRightLeftIcon,
   BriefcaseIcon,
   ChevronRightIcon,
   ClipboardDocumentCheckIcon,
   MagnifyingGlassIcon,
+  MapPinIcon,
+  TrophyIcon,
 } from '@heroicons/react/24/outline'
 import { useState } from 'react'
 
@@ -73,15 +76,21 @@ export default function VerifikasiPage() {
               </div>
             ) : (
               filtered.map((item) => {
-                const isIPG = item.layanan.startsWith('IPG')
+                const layananMeta: Record<string, { bg: string; icon: React.ReactNode }> = {
+                  'IPG Profesi':                             { bg: 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-400', icon: <BriefcaseIcon className="h-5 w-5" /> },
+                  'IPG Sertifikasi':                         { bg: 'bg-violet-100 text-violet-600 dark:bg-violet-900/40 dark:text-violet-400', icon: <BriefcaseIcon className="h-5 w-5" /> },
+                  'IPG Akademik':                            { bg: 'bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400',         icon: <BriefcaseIcon className="h-5 w-5" /> },
+                  'Tugas Belajar Mandiri':                   { bg: 'bg-teal-100 text-teal-600 dark:bg-teal-900/40 dark:text-teal-400',         icon: <AcademicCapIcon className="h-5 w-5" /> },
+                  'Tugas Belajar Beasiswa':                  { bg: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400', icon: <AcademicCapIcon className="h-5 w-5" /> },
+                  'Pindah Wilayah Kerja':                    { bg: 'bg-orange-100 text-orange-600 dark:bg-orange-900/40 dark:text-orange-400',   icon: <MapPinIcon className="h-5 w-5" /> },
+                  'Uji Kompetensi JF - Perpindahan Jabatan': { bg: 'bg-rose-100 text-rose-600 dark:bg-rose-900/40 dark:text-rose-400',           icon: <ArrowsRightLeftIcon className="h-5 w-5" /> },
+                  'Uji Kompetensi JF - Kenaikan Jenjang':    { bg: 'bg-pink-100 text-pink-600 dark:bg-pink-900/40 dark:text-pink-400',           icon: <TrophyIcon className="h-5 w-5" /> },
+                }
+                const meta = layananMeta[item.layanan] ?? { bg: 'bg-slate-100 text-slate-600', icon: <BriefcaseIcon className="h-5 w-5" /> }
                 return (
                   <div key={item.id} className="flex items-center gap-4 py-4">
-                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
-                      isIPG
-                        ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-400'
-                        : 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400'
-                    }`}>
-                      {isIPG ? <BriefcaseIcon className="h-5 w-5" /> : <AcademicCapIcon className="h-5 w-5" />}
+                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${meta.bg}`}>
+                      {meta.icon}
                     </div>
 
                     <div className="min-w-0 flex-1">

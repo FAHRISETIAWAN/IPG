@@ -17,8 +17,11 @@ const PAGE_LABELS: Record<string, string> = {
   '/verifikasi': 'Verifikasi Pengajuan',
   '/laporan': 'Laporan Pengajuan',
   '/pegawai': 'Manajemen Pegawai',
-  '/sk': 'SK Pegawai',
+  '/sk': 'Surat Keputusan',
+  '/surat/rekomendasi': 'Surat Rekomendasi',
+  '/surat/sertifikat': 'Sertifikat',
   '/perpanjangan': 'Perpanjangan TUBEL Beasiswa',
+  '/formujikom': 'Uji Kompetensi JF',
 }
 
 export function DashboardTopbar() {

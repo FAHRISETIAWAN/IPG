@@ -215,34 +215,11 @@ export default function PerpanjanganPage() {
 
         <div className="rounded-2xl bg-white dark:bg-slate-900">
           {/* Card header */}
-          <div className="px-6 py-5">
-            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">Perpanjangan TUBEL Beasiswa</h2>
-            <p className="mt-0.5 text-sm text-slate-400">Kelola perpanjangan SK Tugas Belajar Beasiswa</p>
-          </div>
-
-          {/* Filter + Search */}
-          <div className="flex flex-col gap-3 px-6 pb-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex gap-2">
-              {filterTabs.map(tab => (
-                <button key={tab.key} onClick={() => setFilter(tab.key)}
-                  className={`flex items-center gap-2 rounded-xl border-2 px-4 py-2 text-sm font-medium transition ${
-                    filter === tab.key
-                      ? 'border-indigo-600 bg-indigo-50 text-indigo-700 dark:border-indigo-500 dark:bg-indigo-900/30 dark:text-indigo-300'
-                      : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400'
-                  }`}
-                >
-                  <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold ${
-                    tab.key === 'sudah'
-                      ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400'
-                      : 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400'
-                  }`}>
-                    {counts[tab.key]}
-                  </span>
-                  {tab.label}
-                </button>
-              ))}
+          <div className="flex flex-col gap-3 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">Perpanjangan TUBEL Beasiswa</h2>
+              <p className="mt-0.5 text-sm text-slate-400">Kelola perpanjangan SK Tugas Belajar Beasiswa</p>
             </div>
-
             <div className="relative w-full sm:w-64">
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input value={search} onChange={e => setSearch(e.target.value)}
@@ -252,11 +229,30 @@ export default function PerpanjanganPage() {
             </div>
           </div>
 
-          {/* Divider */}
-          <div className="border-t border-slate-100 dark:border-slate-700" />
+          {/* Tabs */}
+          <div className="flex border-b border-slate-100 px-6 dark:border-slate-700">
+            {filterTabs.map(tab => (
+              <button key={tab.key} onClick={() => setFilter(tab.key)}
+                className={`mr-6 border-b-2 pb-3 text-sm font-medium transition-colors ${
+                  filter === tab.key
+                    ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
+                    : 'border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'
+                }`}
+              >
+                {tab.label === 'Belum' ? 'Belum Diproses' : 'Sudah Diproses'}
+                <span className={`ml-2 rounded-full px-1.5 py-0.5 text-[10px] font-semibold ${
+                  filter === tab.key
+                    ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/40'
+                    : 'bg-slate-100 text-slate-400 dark:bg-slate-800'
+                }`}>
+                  {counts[tab.key]}
+                </span>
+              </button>
+            ))}
+          </div>
 
           {/* List */}
-          <div className="divide-y divide-slate-100 px-6 dark:divide-slate-700/50">
+          <div className="flex flex-col gap-3 px-6 py-4">
             {filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <ArrowPathIcon className="mb-3 h-10 w-10 text-slate-300 dark:text-slate-600" />
@@ -264,48 +260,43 @@ export default function PerpanjanganPage() {
               </div>
             ) : (
               filtered.map(p => (
-                <div key={p.id} className="flex items-center gap-4 py-4">
+                <div key={p.id} className="flex items-center gap-4 rounded-xl border border-slate-100 px-4 py-3.5 dark:border-slate-700/60">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-sm font-bold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
                     {p.nama.split(' ').map(n => n[0]).slice(0, 2).join('')}
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                       <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{p.nama}</span>
                       <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
                         TUBEL Beasiswa
                       </span>
-                      {p.status === 'sudah' && (
-                        <span className="flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                          <CheckCircleIcon className="h-3 w-3" /> Selesai
-                        </span>
-                      )}
                     </div>
-                    <p className="mt-0.5 truncate text-xs text-slate-400">{p.nip} · {p.kode}</p>
+                    <p className="mt-0.5 text-xs text-slate-400">{p.nip} · {p.kode}</p>
                     {p.status === 'sudah' && p.nomorSKPerpanjangan && (
-                      <p className="truncate text-[11px] text-slate-400">
-                        SK: {p.nomorSKPerpanjangan}{p.tanggalSKPerpanjangan ? ` · ${p.tanggalSKPerpanjangan}` : ''}
+                      <p className="mt-0.5 text-xs text-emerald-600 dark:text-emerald-400">
+                        {p.nomorSKPerpanjangan}{p.tanggalSKPerpanjangan ? ` · ${p.tanggalSKPerpanjangan}` : ''}
                       </p>
                     )}
                   </div>
 
-                  <button onClick={() => setSelected(p)}
-                    className={`flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold transition ${
-                      p.status === 'sudah'
-                        ? 'border-slate-200 bg-white text-slate-500 hover:border-indigo-300 hover:text-indigo-600 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-400'
-                        : 'border-indigo-200 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:border-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-400'
-                    }`}
-                  >
-                    <ArrowPathIcon className="h-3.5 w-3.5" />
-                    {p.status === 'sudah' ? 'Edit' : 'Isi Data'}
-                  </button>
+                  <div className="flex shrink-0 items-center gap-2">
+                    {p.status === 'sudah' && (
+                      <CheckCircleIcon className="h-5 w-5 text-emerald-500" />
+                    )}
+                    <button onClick={() => setSelected(p)}
+                      className="rounded-lg border border-indigo-200 bg-indigo-50 px-4 py-2 text-xs font-semibold text-indigo-600 transition hover:bg-indigo-100 dark:border-indigo-800/50 dark:bg-indigo-900/20 dark:text-indigo-400"
+                    >
+                      {p.status === 'sudah' ? 'Edit' : 'Isi Data'}
+                    </button>
+                  </div>
                 </div>
               ))
             )}
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-4">
+          <div className="px-6 pb-5">
             <p className="text-xs text-slate-400">Menampilkan {filtered.length} dari {counts[filter]} pegawai</p>
           </div>
         </div>

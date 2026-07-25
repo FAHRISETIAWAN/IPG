@@ -4,6 +4,8 @@ import {
   alasanPenolakan,
   type DataPendidikanPegawai,
   type DataProfesiPegawai,
+  type DataUjiKomKenaikan,
+  type DataUjiKomPerpindahan,
   type PegawaiPengajuan,
   type PengajuanVerifikasi,
 } from '@/data/verifikasi-data'
@@ -67,15 +69,27 @@ const statusColor: Record<string, { bg: string; text: string; label: string }> =
 }
 
 const layananColor: Record<string, string> = {
-  'IPG Profesi':    'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400',
-  'IPG Sertifikasi':'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
-  'IPG Akademik':   'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  'TUBEL Mandiri':  'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400',
-  'TUBEL Beasiswa': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+  'IPG Profesi':                              'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400',
+  'IPG Sertifikasi':                          'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
+  'IPG Akademik':                             'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  'Tugas Belajar Mandiri':                    'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400',
+  'Tugas Belajar Beasiswa':                   'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+  'Pindah Wilayah Kerja':                     'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
+  'Uji Kompetensi JF - Perpindahan Jabatan':  'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400',
+  'Uji Kompetensi JF - Kenaikan Jenjang':     'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400',
 }
 
-function isProfesi(data: DataProfesiPegawai | DataPendidikanPegawai): data is DataProfesiPegawai {
+function isProfesi(data: object): data is DataProfesiPegawai {
   return 'namaProfesi' in data
+}
+function isPendidikan(data: object): data is DataPendidikanPegawai {
+  return 'namaUniversitas' in data
+}
+function isUjiKomPerpindahan(data: object): data is DataUjiKomPerpindahan {
+  return 'jenisPerpindahan' in data
+}
+function isUjiKomKenaikan(data: object): data is DataUjiKomKenaikan {
+  return !('jenisPerpindahan' in data) && !('namaProfesi' in data) && !('namaUniversitas' in data) && 'dari' in data
 }
 
 function FormDataProfesi({ data }: { data: DataProfesiPegawai }) {
@@ -88,6 +102,23 @@ function FormDataProfesi({ data }: { data: DataProfesiPegawai }) {
     { label: 'Jenis Profesi', value: data.jenisProfesi },
     ...(data.gelarDepan  ? [{ label: 'Gelar Depan',  value: data.gelarDepan }]  : []),
     ...(data.gelarBelakang ? [{ label: 'Gelar Belakang', value: data.gelarBelakang }] : []),
+  ]
+  return <FieldGrid fields={fields} />
+}
+
+function FormDataUjiKomPerpindahan({ data }: { data: DataUjiKomPerpindahan }) {
+  const fields = [
+    { label: 'Jenis Perpindahan', value: data.jenisPerpindahan },
+    { label: 'Dari', value: data.dari },
+    { label: 'Ke', value: data.ke },
+  ]
+  return <FieldGrid fields={fields} />
+}
+
+function FormDataUjiKomKenaikan({ data }: { data: DataUjiKomKenaikan }) {
+  const fields = [
+    { label: 'Dari Jenjang', value: data.dari },
+    { label: 'Ke Jenjang', value: data.ke },
   ]
   return <FieldGrid fields={fields} />
 }
@@ -121,10 +152,15 @@ function FieldGrid({ fields }: { fields: { label: string; value: string }[] }) {
   )
 }
 
+function formDataLabel(layanan: string): string {
+  if (layanan === 'IPG Profesi' || layanan === 'IPG Sertifikasi') return 'Data Profesi / Sertifikasi'
+  if (layanan.startsWith('Uji Kompetensi JF')) return 'Data Uji Kompetensi JF'
+  return 'Data Pendidikan'
+}
+
 function PegawaiAccordion({ p, layanan, defaultOpen }: { p: PegawaiPengajuan; layanan: string; defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen ?? false)
   const [viewingDoc, setViewingDoc] = useState<string | null>(null)
-  const isIPGProfesiOrSertif = layanan === 'IPG Profesi' || layanan === 'IPG Sertifikasi'
 
   return (
     <>
@@ -164,13 +200,18 @@ function PegawaiAccordion({ p, layanan, defaultOpen }: { p: PegawaiPengajuan; la
               {p.formData && (
                 <div>
                   <p className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                    {isIPGProfesiOrSertif ? 'Data Profesi / Sertifikasi' : 'Data Pendidikan'}
+                    {formDataLabel(layanan)}
                   </p>
                   <div className="rounded-xl bg-slate-50 p-4 dark:bg-slate-800/50">
-                    {isProfesi(p.formData)
-                      ? <FormDataProfesi data={p.formData} />
-                      : <FormDataPendidikan data={p.formData} />
-                    }
+                    {isProfesi(p.formData) ? (
+                      <FormDataProfesi data={p.formData} />
+                    ) : isPendidikan(p.formData) ? (
+                      <FormDataPendidikan data={p.formData} />
+                    ) : isUjiKomPerpindahan(p.formData) ? (
+                      <FormDataUjiKomPerpindahan data={p.formData} />
+                    ) : isUjiKomKenaikan(p.formData) ? (
+                      <FormDataUjiKomKenaikan data={p.formData} />
+                    ) : null}
                   </div>
                 </div>
               )}

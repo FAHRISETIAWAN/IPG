@@ -30,21 +30,26 @@ interface CheckItem {
 
 function buildChecks(data: Props['data']): CheckItem[] {
   const nomorValid = /^[A-Z0-9][A-Z0-9/.\-]*$/.test(data.nomorSurat.trim()) && data.nomorSurat.trim().length >= 3
-  const isPWK = data.layanan === 'PWK'
+  const noSubLayanan = data.layanan === 'PWK'
+  const layananLabel: Record<string, string> = {
+    IPG: 'IPG', TUBEL: 'Tugas Belajar', PWK: 'Pindah Wilayah Kerja', UJIKOM: 'Uji Kompetensi JF',
+  }
   return [
     {
       label: 'Layanan dipilih',
-      detail: data.layanan ? `Layanan: ${data.layanan}` : 'Belum memilih layanan (IPG / TUBEL / PWK)',
+      detail: data.layanan
+        ? `Layanan: ${layananLabel[data.layanan] ?? data.layanan}`
+        : 'Belum memilih layanan',
       valid: !!data.layanan,
     },
     {
       label: 'Jenis layanan dipilih',
-      detail: isPWK
-        ? 'PWK tidak memerlukan sub-layanan'
+      detail: noSubLayanan
+        ? `${layananLabel[data.layanan]} tidak memerlukan sub-layanan`
         : data.subLayanan
         ? `Jenis: ${data.subLayanan}`
-        : `Belum memilih jenis ${data.layanan || 'layanan'}`,
-      valid: isPWK ? true : !!data.subLayanan,
+        : `Belum memilih jenis ${layananLabel[data.layanan] ?? data.layanan}`,
+      valid: noSubLayanan ? true : !!data.subLayanan,
     },
     {
       label: 'Nomor Surat Entri',
@@ -127,6 +132,8 @@ export function KonfirmasiDialog({ open, onClose, data }: Props) {
       })
       const dest = data.layanan === 'PWK'
         ? `/formkelengkapan?${params.toString()}`
+        : data.layanan === 'UJIKOM'
+        ? `/formujikom?${params.toString()}`
         : `/formdatapegawai?${params.toString()}`
       router.push(dest)
     }, 3000)
@@ -258,7 +265,7 @@ export function KonfirmasiDialog({ open, onClose, data }: Props) {
                           {countdown}
                         </span>
                         <span className="text-sm text-emerald-700 dark:text-emerald-400">
-                          Mengarahkan ke halaman kelengkapan dokumen...
+                          Mengarahkan ke halaman berikutnya...
                         </span>
                       </div>
                       <button
@@ -267,6 +274,8 @@ export function KonfirmasiDialog({ open, onClose, data }: Props) {
                           const params = new URLSearchParams({ layanan: data.layanan, subLayanan: data.subLayanan, kode, nips: data.pegawai.map(p => p.nip).join(',') })
                           const dest = data.layanan === 'PWK'
                             ? `/formkelengkapan?${params.toString()}`
+                            : data.layanan === 'UJIKOM'
+                            ? `/formujikom?${params.toString()}`
                             : `/formdatapegawai?${params.toString()}`
                           router.push(dest)
                         }}

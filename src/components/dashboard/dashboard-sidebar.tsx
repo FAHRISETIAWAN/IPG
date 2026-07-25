@@ -7,13 +7,16 @@ import { useState } from 'react'
 import {
   ArrowPathIcon,
   ChartBarIcon,
+  ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   ClipboardDocumentCheckIcon,
   ClipboardDocumentListIcon,
   Cog6ToothIcon,
   DocumentCheckIcon,
+  DocumentTextIcon,
   HomeIcon,
+  StarIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline'
 import {
@@ -23,15 +26,21 @@ import {
   ClipboardDocumentListIcon as ClipboardSolid,
   Cog6ToothIcon as CogSolid,
   DocumentCheckIcon as DocumentCheckSolid,
+  DocumentTextIcon as DocumentTextSolid,
   HomeIcon as HomeSolid,
   UserGroupIcon as UserGroupSolid,
 } from '@heroicons/react/24/solid'
+
+const SURAT_CHILDREN = [
+  { label: 'Surat Rekomendasi', href: '/surat/rekomendasi' },
+  { label: 'Surat Keputusan',   href: '/sk' },
+  { label: 'Sertifikat',        href: '/surat/sertifikat' },
+]
 
 const navItems = [
   { label: 'Dashboard',       href: '/dashboard',      icon: HomeIcon,                   iconActive: HomeSolid },
   { label: 'Form Permintaan', href: '/formpermintaan', icon: ClipboardDocumentListIcon,  iconActive: ClipboardSolid },
   { label: 'Verifikasi',      href: '/verifikasi',     icon: ClipboardDocumentCheckIcon, iconActive: ClipboardCheckSolid },
-  { label: 'SK Pegawai',      href: '/sk',             icon: DocumentCheckIcon,          iconActive: DocumentCheckSolid },
   { label: 'Perpanjangan',    href: '/perpanjangan',   icon: ArrowPathIcon,              iconActive: ArrowPathSolid },
   { label: 'Laporan',         href: '/laporan',        icon: ChartBarIcon,               iconActive: ChartBarSolid },
   { label: 'Pegawai',         href: '/pegawai',        icon: UserGroupIcon,              iconActive: UserGroupSolid },
@@ -48,6 +57,8 @@ const bottomNavItems = [
 export function DashboardSidebar() {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(true)
+  const isSuratActive = SURAT_CHILDREN.some(c => pathname === c.href)
+  const [suratOpen, setSuratOpen] = useState(isSuratActive)
 
   return (
     <>
@@ -70,7 +81,97 @@ export function DashboardSidebar() {
 
         {/* Nav */}
         <nav className={clsx('flex flex-1 flex-col gap-1', collapsed ? 'items-center' : 'px-3')}>
-          {navItems.map((item) => {
+          {/* Dashboard, Form Permintaan, Verifikasi */}
+          {navItems.slice(0, 3).map((item) => {
+            const isActive = pathname === item.href
+            const Icon = isActive ? item.iconActive : item.icon
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                title={collapsed ? item.label : undefined}
+                className={clsx(
+                  'group relative flex h-10 items-center rounded-xl transition-colors',
+                  collapsed ? 'w-10 justify-center' : 'w-full gap-3 px-3',
+                  isActive
+                    ? 'bg-indigo-600 text-white'
+                    : 'text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200'
+                )}
+              >
+                <Icon className="h-5 w-5 shrink-0" />
+                {collapsed ? (
+                  <span className="pointer-events-none absolute left-14 z-50 whitespace-nowrap rounded-lg bg-slate-800 px-2.5 py-1 text-xs font-medium text-slate-100 opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                    {item.label}
+                  </span>
+                ) : (
+                  <span className="text-sm font-medium">{item.label}</span>
+                )}
+              </Link>
+            )
+          })}
+
+          {/* Surat Kepegawaian — submenu */}
+          {collapsed ? (
+            <div className="group relative">
+              <button
+                title="Surat Kepegawaian"
+                onClick={() => { setCollapsed(false); setSuratOpen(true) }}
+                className={clsx(
+                  'group relative flex h-10 w-10 items-center justify-center rounded-xl transition-colors',
+                  isSuratActive
+                    ? 'bg-indigo-600 text-white'
+                    : 'text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200'
+                )}
+              >
+                {isSuratActive ? <DocumentCheckSolid className="h-5 w-5 shrink-0" /> : <DocumentCheckIcon className="h-5 w-5 shrink-0" />}
+                <span className="pointer-events-none absolute left-14 z-50 whitespace-nowrap rounded-lg bg-slate-800 px-2.5 py-1 text-xs font-medium text-slate-100 opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                  Kepegawaian
+                </span>
+              </button>
+            </div>
+          ) : (
+            <div>
+              <button
+                onClick={() => setSuratOpen(v => !v)}
+                className={clsx(
+                  'flex h-10 w-full items-center gap-3 rounded-xl px-3 transition-colors',
+                  isSuratActive
+                    ? 'text-indigo-600 dark:text-indigo-400'
+                    : 'text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200'
+                )}
+              >
+                {isSuratActive ? <DocumentCheckSolid className="h-5 w-5 shrink-0" /> : <DocumentCheckIcon className="h-5 w-5 shrink-0" />}
+                <span className="flex-1 text-left text-sm font-medium">Kepegawaian</span>
+                <ChevronDownIcon className={clsx('h-3.5 w-3.5 transition-transform duration-200', suratOpen ? 'rotate-180' : '')} />
+              </button>
+
+              {suratOpen && (
+                <div className="ml-8 mt-0.5 flex flex-col gap-0.5">
+                  {SURAT_CHILDREN.map(child => {
+                    const isActive = pathname === child.href
+                    return (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        className={clsx(
+                          'flex h-8 items-center rounded-lg px-3 text-xs font-medium transition-colors',
+                          isActive
+                            ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400'
+                            : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-300'
+                        )}
+                      >
+                        <span className={clsx('mr-2 h-1 w-1 rounded-full', isActive ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-600')} />
+                        {child.label}
+                      </Link>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Perpanjangan, Laporan, Pegawai */}
+          {navItems.slice(3).map((item) => {
             const isActive = pathname === item.href
             const Icon = isActive ? item.iconActive : item.icon
             return (

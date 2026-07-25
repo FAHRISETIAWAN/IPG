@@ -6,12 +6,21 @@ import type { Pegawai } from '@/data/pegawai-data'
 import { ChevronRightIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react'
 
-type Layanan = 'IPG' | 'TUBEL' | 'PWK' | ''
+type Layanan = 'IPG' | 'TUBEL' | 'PWK' | 'UJIKOM' | ''
 type SubLayananIPG = 'Profesi' | 'Sertifikasi' | 'Akademik' | ''
 type SubLayananTUBEL = 'Mandiri' | 'Beasiswa' | ''
+type SubLayananUJIKOM = 'Perpindahan Jabatan' | 'Kenaikan Jenjang' | ''
 
 const SUB_IPG: SubLayananIPG[] = ['Profesi', 'Sertifikasi', 'Akademik']
 const SUB_TUBEL: SubLayananTUBEL[] = ['Mandiri', 'Beasiswa']
+const SUB_UJIKOM: SubLayananUJIKOM[] = ['Perpindahan Jabatan', 'Kenaikan Jenjang']
+
+const LAYANAN_OPTIONS: { value: Layanan; label: string }[] = [
+  { value: 'IPG',    label: 'IPG' },
+  { value: 'TUBEL',  label: 'Tugas Belajar' },
+  { value: 'PWK',    label: 'Pindah Wilayah Kerja' },
+  { value: 'UJIKOM', label: 'Uji Kompetensi JF' },
+]
 
 function RadioCard({
   label, checked, onClick,
@@ -26,7 +35,7 @@ function RadioCard({
           : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300'
       }`}
     >
-      <span className={`mr-2 flex h-4 w-4 items-center justify-center rounded-full border-2 ${
+      <span className={`mr-2 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 ${
         checked ? 'border-indigo-600 dark:border-indigo-400' : 'border-slate-300 dark:border-slate-600'
       }`}>
         {checked && <span className="h-2 w-2 rounded-full bg-indigo-600 dark:bg-indigo-400" />}
@@ -40,6 +49,7 @@ export default function FormPermintaanPage() {
   const [layanan, setLayanan] = useState<Layanan>('')
   const [subIPG, setSubIPG] = useState<SubLayananIPG>('')
   const [subTUBEL, setSubTUBEL] = useState<SubLayananTUBEL>('')
+  const [subUJIKOM, setSubUJIKOM] = useState<SubLayananUJIKOM>('')
   const [nomorSurat, setNomorSurat] = useState('')
   const [pegawai, setPegawai] = useState<Pegawai[]>([])
   const [showKonfirmasi, setShowKonfirmasi] = useState(false)
@@ -48,6 +58,7 @@ export default function FormPermintaanPage() {
     setLayanan(val)
     setSubIPG('')
     setSubTUBEL('')
+    setSubUJIKOM('')
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -55,7 +66,7 @@ export default function FormPermintaanPage() {
     setShowKonfirmasi(true)
   }
 
-  const subLayanan = layanan === 'IPG' ? subIPG : layanan === 'TUBEL' ? subTUBEL : ''
+  const subLayanan = layanan === 'IPG' ? subIPG : layanan === 'TUBEL' ? subTUBEL : layanan === 'UJIKOM' ? subUJIKOM : ''
 
   return (
     <>
@@ -105,10 +116,15 @@ export default function FormPermintaanPage() {
               <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">
                 Pilih Layanan <span className="text-red-500">*</span>
               </label>
-              <div className="flex gap-3">
-                <RadioCard label="IPG" checked={layanan === 'IPG'} onClick={() => handleLayanan('IPG')} />
-                <RadioCard label="TUBEL" checked={layanan === 'TUBEL'} onClick={() => handleLayanan('TUBEL')} />
-                <RadioCard label="PWK" checked={layanan === 'PWK'} onClick={() => handleLayanan('PWK')} />
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {LAYANAN_OPTIONS.map(opt => (
+                  <RadioCard
+                    key={opt.value}
+                    label={opt.label}
+                    checked={layanan === opt.value}
+                    onClick={() => handleLayanan(opt.value)}
+                  />
+                ))}
               </div>
             </div>
 
@@ -129,11 +145,24 @@ export default function FormPermintaanPage() {
             {layanan === 'TUBEL' && (
               <div>
                 <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">
-                  Jenis TUBEL <span className="text-red-500">*</span>
+                  Jenis Tugas Belajar <span className="text-red-500">*</span>
                 </label>
                 <div className="flex gap-3">
                   {SUB_TUBEL.map((item) => (
                     <RadioCard key={item} label={item} checked={subTUBEL === item} onClick={() => setSubTUBEL(item)} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {layanan === 'UJIKOM' && (
+              <div>
+                <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Jenis Uji Kompetensi JF <span className="text-red-500">*</span>
+                </label>
+                <div className="flex gap-3">
+                  {SUB_UJIKOM.map((item) => (
+                    <RadioCard key={item} label={item} checked={subUJIKOM === item} onClick={() => setSubUJIKOM(item)} />
                   ))}
                 </div>
               </div>

@@ -22,6 +22,18 @@ export const statsData = {
     bulan: 'Juni',
     percentage: 73,
   },
+  totalPWK: {
+    total: 24,
+    target: 40,
+    bulan: 'Juni',
+    percentage: 60,
+  },
+  totalUJIKOM: {
+    total: 17,
+    target: 30,
+    bulan: 'Juni',
+    percentage: 57,
+  },
 }
 
 export const chartData = [
@@ -58,14 +70,17 @@ export const chartData = [
 ]
 
 export const layananPhases = [
-  { phase: 'IPG Profesi',     count: 54, color: '#6366f1', percentage: 54 },
-  { phase: 'IPG Sertifikasi', count: 22, color: '#a78bfa', percentage: 22 },
-  { phase: 'IPG Akademik',    count: 31, color: '#818cf8', percentage: 31 },
-  { phase: 'TUBEL Mandiri',   count: 35, color: '#10b981', percentage: 35 },
-  { phase: 'TUBEL Beasiswa',  count: 23, color: '#34d399', percentage: 23 },
+  { phase: 'IPG Profesi',                   count: 54, color: '#6366f1' },
+  { phase: 'IPG Sertifikasi',               count: 22, color: '#a78bfa' },
+  { phase: 'IPG Akademik',                  count: 31, color: '#818cf8' },
+  { phase: 'Tugas Belajar Mandiri',         count: 35, color: '#10b981' },
+  { phase: 'Tugas Belajar Beasiswa',        count: 23, color: '#34d399' },
+  { phase: 'Pindah Wilayah Kerja',          count: 24, color: '#f97316' },
+  { phase: 'UjiKom Perpindahan Jabatan',    count: 11, color: '#f43f5e' },
+  { phase: 'UjiKom Kenaikan Jenjang',       count:  6, color: '#fb7185' },
 ]
 
-export const totalPengajuanAktif = 165
+export const totalPengajuanAktif = 206
 
 export type JenisPengajuan = 'ipg' | 'tubel' | 'rapat'
 

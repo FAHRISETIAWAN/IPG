@@ -1,5 +1,10 @@
 export type StatusPengajuan = 'menunggu' | 'diproses' | 'diverifikasi' | 'ditolak'
-export type JenisLayanan = 'IPG Profesi' | 'IPG Sertifikasi' | 'IPG Akademik' | 'TUBEL Mandiri' | 'TUBEL Beasiswa'
+export type JenisLayanan =
+  | 'IPG Profesi' | 'IPG Sertifikasi' | 'IPG Akademik'
+  | 'Tugas Belajar Mandiri' | 'Tugas Belajar Beasiswa'
+  | 'Pindah Wilayah Kerja'
+  | 'Uji Kompetensi JF - Perpindahan Jabatan'
+  | 'Uji Kompetensi JF - Kenaikan Jenjang'
 
 export interface DokumenItem {
   nama: string
@@ -31,12 +36,23 @@ export interface DataPendidikanPegawai {
   namaJabatan?: string
 }
 
+export interface DataUjiKomPerpindahan {
+  jenisPerpindahan: string
+  dari: string
+  ke: string
+}
+
+export interface DataUjiKomKenaikan {
+  dari: string
+  ke: string
+}
+
 export interface PegawaiPengajuan {
   nama: string
   nip: string
   jabatan: string
   unit: string
-  formData?: DataProfesiPegawai | DataPendidikanPegawai
+  formData?: DataProfesiPegawai | DataPendidikanPegawai | DataUjiKomPerpindahan | DataUjiKomKenaikan
   dokumen: DokumenItem[]
 }
 
@@ -62,6 +78,7 @@ export const alasanPenolakan = [
 ]
 
 export const daftarPengajuan: PengajuanVerifikasi[] = [
+  // ── IPG Profesi ──────────────────────────────────────────────────────────
   {
     id: '1',
     kode: 'IPG-20260601-001',
@@ -81,7 +98,6 @@ export const daftarPengajuan: PengajuanVerifikasi[] = [
           { nama: 'SK Pangkat dan SK Jabatan Terakhir', file: 'pangkat_ahmad.pdf', ukuran: '0.5 MB' },
           { nama: 'SK PNS dan SK CPNS', file: 'sk_pns_ahmad.pdf', ukuran: '0.6 MB' },
           { nama: 'Ijazah Terakhir', file: 'ijazah_ahmad.pdf', ukuran: '0.9 MB' },
-          { nama: 'Transkrip Nilai', file: 'transkrip_ahmad.pdf', ukuran: '0.7 MB' },
         ],
       },
       {
@@ -95,16 +111,17 @@ export const daftarPengajuan: PengajuanVerifikasi[] = [
           { nama: 'SK Pangkat dan SK Jabatan Terakhir', file: 'pangkat_siti.pdf', ukuran: '0.4 MB' },
           { nama: 'SK PNS dan SK CPNS', file: 'sk_pns_siti.pdf', ukuran: '0.5 MB' },
           { nama: 'Ijazah Terakhir', file: 'ijazah_siti.pdf', ukuran: '0.8 MB' },
-          { nama: 'Transkrip Nilai', file: 'transkrip_siti.pdf', ukuran: '0.6 MB' },
         ],
       },
     ],
   },
+
+  // ── Tugas Belajar Beasiswa ───────────────────────────────────────────────
   {
     id: '2',
     kode: 'TUBEL-20260603-002',
     tanggal: '03 Juni 2026',
-    layanan: 'TUBEL Beasiswa',
+    layanan: 'Tugas Belajar Beasiswa',
     nomorSurat: 'B/1002/KP.02.04/2026',
     status: 'menunggu',
     pegawai: [
@@ -126,6 +143,8 @@ export const daftarPengajuan: PengajuanVerifikasi[] = [
       },
     ],
   },
+
+  // ── IPG Akademik ─────────────────────────────────────────────────────────
   {
     id: '3',
     kode: 'IPG-20260605-003',
@@ -146,49 +165,18 @@ export const daftarPengajuan: PengajuanVerifikasi[] = [
           { nama: 'SK Pangkat dan SK Jabatan Terakhir', file: 'pangkat_dewi.pdf', ukuran: '0.5 MB' },
           { nama: 'SK PNS dan SK CPNS', file: 'sk_pns_dewi.pdf', ukuran: '0.4 MB' },
           { nama: 'Ijazah Terakhir', file: 'ijazah_dewi.pdf', ukuran: '0.8 MB' },
-          { nama: 'Transkrip Nilai', file: 'transkrip_dewi.pdf', ukuran: '0.6 MB' },
           { nama: 'Proposal Studi', file: 'proposal_dewi.pdf', ukuran: '1.0 MB' },
-        ],
-      },
-      {
-        nama: 'Eko Prasetyo', nip: '199205182014011005', jabatan: 'Perencana', unit: 'Biro Perencanaan',
-        formData: {
-          nama: 'EKO PRASETYO', nip: '199205182014011005', golongan: 'III/A', jabatan: 'PERENCANA',
-          unitKerja: 'BIRO PERENCANAAN', sponsor: 'PEMERINTAH', jurusan: 'PERENCANAAN PEMBANGUNAN',
-          programStudi: 'S-2', namaUniversitas: 'UNIVERSITAS BRAWIJAYA',
-        } as DataPendidikanPegawai,
-        dokumen: [
-          { nama: 'SKP 2 Tahun Terakhir', file: 'skp_eko.pdf', ukuran: '0.6 MB' },
-          { nama: 'SK Pangkat dan SK Jabatan Terakhir', file: 'pangkat_eko.pdf', ukuran: '0.5 MB' },
-          { nama: 'SK PNS dan SK CPNS', file: 'sk_pns_eko.pdf', ukuran: '0.4 MB' },
-          { nama: 'Ijazah Terakhir', file: 'ijazah_eko.pdf', ukuran: '0.9 MB' },
-          { nama: 'Transkrip Nilai', file: 'transkrip_eko.pdf', ukuran: '0.7 MB' },
-          { nama: 'Proposal Studi', file: 'proposal_eko.pdf', ukuran: '0.8 MB' },
-        ],
-      },
-      {
-        nama: 'Fitri Handayani', nip: '198604252015012006', jabatan: 'Analis SDM', unit: 'Biro Kepegawaian',
-        formData: {
-          nama: 'FITRI HANDAYANI', nip: '198604252015012006', golongan: 'III/B', jabatan: 'ANALIS SDM',
-          unitKerja: 'BIRO KEPEGAWAIAN', sponsor: 'PEMERINTAH', jurusan: 'MANAJEMEN SDM',
-          programStudi: 'S-2', namaUniversitas: 'UNIVERSITAS PADJADJARAN',
-        } as DataPendidikanPegawai,
-        dokumen: [
-          { nama: 'SKP 2 Tahun Terakhir', file: 'skp_fitri.pdf', ukuran: '0.7 MB' },
-          { nama: 'SK Pangkat dan SK Jabatan Terakhir', file: 'pangkat_fitri.pdf', ukuran: '0.5 MB' },
-          { nama: 'SK PNS dan SK CPNS', file: 'sk_pns_fitri.pdf', ukuran: '0.6 MB' },
-          { nama: 'Ijazah Terakhir', file: 'ijazah_fitri.pdf', ukuran: '0.8 MB' },
-          { nama: 'Transkrip Nilai', file: 'transkrip_fitri.pdf', ukuran: '0.6 MB' },
-          { nama: 'Proposal Studi', file: 'proposal_fitri.pdf', ukuran: '0.9 MB' },
         ],
       },
     ],
   },
+
+  // ── Tugas Belajar Mandiri ────────────────────────────────────────────────
   {
     id: '4',
     kode: 'TUBEL-20260608-004',
     tanggal: '08 Juni 2026',
-    layanan: 'TUBEL Mandiri',
+    layanan: 'Tugas Belajar Mandiri',
     nomorSurat: 'B/1004/KP.02.04/2026',
     status: 'diverifikasi',
     pegawai: [
@@ -205,11 +193,12 @@ export const daftarPengajuan: PengajuanVerifikasi[] = [
           { nama: 'SK Pangkat dan SK Jabatan Terakhir', file: 'pangkat_galih.pdf', ukuran: '0.4 MB' },
           { nama: 'SKP 2 Tahun Terakhir', file: 'skp_galih.pdf', ukuran: '0.5 MB' },
           { nama: 'Surat Bebas Hukdis', file: 'hukdis_galih.pdf', ukuran: '0.2 MB' },
-          { nama: 'Surat Usulan Pengantar', file: 'pengantar_galih.pdf', ukuran: '0.3 MB' },
         ],
       },
     ],
   },
+
+  // ── IPG Sertifikasi ──────────────────────────────────────────────────────
   {
     id: '5',
     kode: 'IPG-20260610-005',
@@ -228,45 +217,111 @@ export const daftarPengajuan: PengajuanVerifikasi[] = [
           { nama: 'SKP 2 Tahun Terakhir', file: 'skp_hani.pdf', ukuran: '0.6 MB' },
           { nama: 'SK Pangkat dan SK Jabatan Terakhir', file: 'pangkat_hani.pdf', ukuran: '0.5 MB' },
           { nama: 'SK PNS dan SK CPNS', file: 'sk_pns_hani.pdf', ukuran: '0.4 MB' },
-          { nama: 'Sertifikat / Bukti Pendaftaran', file: 'sertif_hani.pdf', ukuran: '0.7 MB' },
+          { nama: 'Ijazah', file: 'sertif_hani.pdf', ukuran: '0.7 MB' },
         ],
       },
     ],
   },
+
+  // ── Pindah Wilayah Kerja ─────────────────────────────────────────────────
   {
     id: '6',
-    kode: 'IPG-20260612-006',
+    kode: 'PWK-20260612-006',
     tanggal: '12 Juni 2026',
-    layanan: 'IPG Profesi',
-    nomorSurat: 'B/1006/KP.02.03/2026',
+    layanan: 'Pindah Wilayah Kerja',
+    nomorSurat: 'B/1006/KP.02.05/2026',
     status: 'menunggu',
     pegawai: [
       {
-        nama: 'Irfan Maulana', nip: '198912052018011009', jabatan: 'Auditor Kepegawaian', unit: 'Inspektorat',
-        formData: {
-          klasifikasiProfesi: 'HUKUM DAN PERUNDANGAN', namaProfesi: 'AUDITOR KEPEGAWAIAN', nomorSertifikat: '401/AUD/BKN/2025',
-          tanggalTerbit: '05 April 2025', lembagaPenyelenggara: 'BADAN KEPEGAWAIAN NEGARA', jenisProfesi: 'Profesi Hukum',
-        } as DataProfesiPegawai,
+        nama: 'Irfan Maulana', nip: '198912052018011009', jabatan: 'Analis Kebijakan', unit: 'Kanwil Jawa Barat',
         dokumen: [
-          { nama: 'SKP 2 Tahun Terakhir', file: 'skp_irfan.pdf', ukuran: '0.9 MB' },
-          { nama: 'SK Pangkat dan SK Jabatan Terakhir', file: 'pangkat_irfan.pdf', ukuran: '0.6 MB' },
-          { nama: 'SK PNS dan SK CPNS', file: 'sk_pns_irfan.pdf', ukuran: '0.5 MB' },
-          { nama: 'Ijazah Terakhir', file: 'ijazah_irfan.pdf', ukuran: '1.0 MB' },
-          { nama: 'Transkrip Nilai', file: 'transkrip_irfan.pdf', ukuran: '0.7 MB' },
+          { nama: 'Rekomendasi Pimpinan', file: 'rekomendasi_irfan.pdf', ukuran: '0.4 MB' },
+          { nama: 'Analisis Rekomendasi Pimpinan', file: 'analisis_irfan.pdf', ukuran: '0.5 MB' },
+          { nama: 'Surat Bebas Hukdis', file: 'hukdis_irfan.pdf', ukuran: '0.3 MB' },
+          { nama: 'Surat Bebas Tunggakan Pekerjaan', file: 'tunggakan_irfan.pdf', ukuran: '0.2 MB' },
+          { nama: 'Surat Permohonan Pribadi', file: 'permohonan_irfan.pdf', ukuran: '0.3 MB' },
+          { nama: 'Surat Eviden Alasan Perpindahan', file: 'eviden_irfan.pdf', ukuran: '0.6 MB' },
+        ],
+      },
+    ],
+  },
+
+  // ── Uji Kompetensi JF - Perpindahan Jabatan ──────────────────────────────
+  {
+    id: '7',
+    kode: 'UJIKOM-20260615-007',
+    tanggal: '15 Juni 2026',
+    layanan: 'Uji Kompetensi JF - Perpindahan Jabatan',
+    nomorSurat: 'B/1007/KP.02.06/2026',
+    status: 'menunggu',
+    pegawai: [
+      {
+        nama: 'Juwita Sari', nip: '199410082019012010', jabatan: 'Kasubbag Umum', unit: 'Sekretariat',
+        formData: {
+          jenisPerpindahan: 'Struktural ke Jabatan Fungsional',
+          dari: 'Kasubbag Umum (Eselon IV)',
+          ke: 'Analis Kebijakan Ahli Pertama',
+        } as DataUjiKomPerpindahan,
+        dokumen: [
+          { nama: 'SKP', file: 'skp_juwita.pdf', ukuran: '0.6 MB' },
+          { nama: 'SK Jabatan Terakhir', file: 'sk_jabatan_juwita.pdf', ukuran: '0.4 MB' },
+          { nama: 'Pangkat Terakhir', file: 'pangkat_juwita.pdf', ukuran: '0.3 MB' },
+          { nama: 'SK PNS', file: 'pns_juwita.pdf', ukuran: '0.5 MB' },
+          { nama: 'SK CPNS', file: 'cpns_juwita.pdf', ukuran: '0.4 MB' },
+          { nama: 'PAK', file: 'pak_juwita.pdf', ukuran: '0.7 MB' },
+          { nama: 'Pernyataan Bebas Hukdis', file: 'hukdis_juwita.pdf', ukuran: '0.2 MB' },
+          { nama: 'Rekomendasi Pimpinan', file: 'rekomendasi_juwita.pdf', ukuran: '0.3 MB' },
+          { nama: 'Rekomendasi Penempatan', file: 'penempatan_juwita.pdf', ukuran: '0.4 MB' },
+          { nama: 'Surat Pernyataan Lepas Jabatan', file: 'lepas_jabatan_juwita.pdf', ukuran: '0.3 MB' },
         ],
       },
       {
-        nama: 'Juwita Sari', nip: '199410082019012010', jabatan: 'Analis Hukum', unit: 'Biro Hukum',
+        nama: 'Krisna Wijaya', nip: '199001152017011011', jabatan: 'Pranata Komputer Terampil', unit: 'Pusdatin',
         formData: {
-          klasifikasiProfesi: 'HUKUM DAN PERUNDANGAN', namaProfesi: 'ANALIS HUKUM', nomorSertifikat: '402/ANL/BKN/2025',
-          tanggalTerbit: '10 April 2025', lembagaPenyelenggara: 'BADAN KEPEGAWAIAN NEGARA', jenisProfesi: 'Profesi Hukum',
-        } as DataProfesiPegawai,
+          jenisPerpindahan: 'Jabatan Fungsional (A) ke Jabatan Fungsional (B)',
+          dari: 'Pranata Komputer Terampil',
+          ke: 'Analis Data Ahli Pertama',
+        } as DataUjiKomPerpindahan,
         dokumen: [
-          { nama: 'SKP 2 Tahun Terakhir', file: 'skp_juwita.pdf', ukuran: '0.7 MB' },
-          { nama: 'SK Pangkat dan SK Jabatan Terakhir', file: 'pangkat_juwita.pdf', ukuran: '0.5 MB' },
-          { nama: 'SK PNS dan SK CPNS', file: 'sk_pns_juwita.pdf', ukuran: '0.4 MB' },
-          { nama: 'Ijazah Terakhir', file: 'ijazah_juwita.pdf', ukuran: '0.8 MB' },
-          { nama: 'Transkrip Nilai', file: 'transkrip_juwita.pdf', ukuran: '0.6 MB' },
+          { nama: 'SKP', file: 'skp_krisna.pdf', ukuran: '0.5 MB' },
+          { nama: 'SK Jabatan Terakhir', file: 'sk_jabatan_krisna.pdf', ukuran: '0.4 MB' },
+          { nama: 'Pangkat Terakhir', file: 'pangkat_krisna.pdf', ukuran: '0.3 MB' },
+          { nama: 'SK PNS', file: 'pns_krisna.pdf', ukuran: '0.5 MB' },
+          { nama: 'SK CPNS', file: 'cpns_krisna.pdf', ukuran: '0.4 MB' },
+          { nama: 'PAK', file: 'pak_krisna.pdf', ukuran: '0.6 MB' },
+          { nama: 'Pernyataan Bebas Hukdis', file: 'hukdis_krisna.pdf', ukuran: '0.2 MB' },
+          { nama: 'Rekomendasi Pimpinan', file: 'rekomendasi_krisna.pdf', ukuran: '0.3 MB' },
+          { nama: 'Rekomendasi Penempatan', file: 'penempatan_krisna.pdf', ukuran: '0.4 MB' },
+        ],
+      },
+    ],
+  },
+
+  // ── Uji Kompetensi JF - Kenaikan Jenjang ────────────────────────────────
+  {
+    id: '8',
+    kode: 'UJIKOM-20260618-008',
+    tanggal: '18 Juni 2026',
+    layanan: 'Uji Kompetensi JF - Kenaikan Jenjang',
+    nomorSurat: 'B/1008/KP.02.06/2026',
+    status: 'menunggu',
+    pegawai: [
+      {
+        nama: 'Laila Nurjanah', nip: '199206202018012012', jabatan: 'Analis Kebijakan Ahli Pertama', unit: 'Biro Perencanaan',
+        formData: {
+          dari: 'Ahli Pertama',
+          ke: 'Ahli Muda',
+        } as DataUjiKomKenaikan,
+        dokumen: [
+          { nama: 'SKP', file: 'skp_laila.pdf', ukuran: '0.6 MB' },
+          { nama: 'SK Jabatan Terakhir', file: 'sk_jabatan_laila.pdf', ukuran: '0.4 MB' },
+          { nama: 'Pangkat Terakhir', file: 'pangkat_laila.pdf', ukuran: '0.3 MB' },
+          { nama: 'SK PNS', file: 'pns_laila.pdf', ukuran: '0.5 MB' },
+          { nama: 'SK CPNS', file: 'cpns_laila.pdf', ukuran: '0.4 MB' },
+          { nama: 'PAK', file: 'pak_laila.pdf', ukuran: '0.8 MB' },
+          { nama: 'Pernyataan Bebas Hukdis', file: 'hukdis_laila.pdf', ukuran: '0.2 MB' },
+          { nama: 'Rekomendasi Pimpinan', file: 'rekomendasi_laila.pdf', ukuran: '0.3 MB' },
+          { nama: 'Rekomendasi Penempatan', file: 'penempatan_laila.pdf', ukuran: '0.4 MB' },
         ],
       },
     ],
