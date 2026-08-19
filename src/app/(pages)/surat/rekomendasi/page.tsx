@@ -197,8 +197,8 @@ export default function SuratRekomendasiPage() {
           {/* Card header */}
           <div className="flex flex-col gap-3 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">Surat Rekomendasi</h2>
-              <p className="mt-0.5 text-sm text-slate-400">Surat pemanggilan Uji Kompetensi JF pegawai</p>
+              <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100">Rekomendasi Pindah Wilayah Kerja</h2>
+              <p className="mt-0.5 text-sm text-slate-400">Rekomendasi Pindah Wilayah Kerja pegawai</p>
             </div>
             <div className="relative w-full sm:w-64">
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />

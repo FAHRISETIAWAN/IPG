@@ -20,6 +20,47 @@ const JENJANG_JF = [
   { value: 'ahli_utama',    label: 'Ahli Utama' },
 ]
 
+const JABATAN_FUNGSIONAL_KENAIKAN = [
+  'PENGELOLA PENGADAAN BARANG/JASA',
+  'ANALIS PENGELOLAAN KEUANGAN APBN',
+  'PENATA LAKSANA BARANG',
+  'AUDITOR',
+  'PUSTAKAWAN',
+  'PRANATA KEUANGAN APBN',
+  'PENGEMBANG TEKNOLOGI PEMBELAJARAN',
+  'ARSIPARIS',
+  'ANALIS HUKUM',
+  'PERANCANG PERATURAN PERUNDANG-UNDANGAN',
+  'PENATA RUANG',
+  'ANALIS ANGGARAN',
+  'ANALIS KEBIJAKAN',
+  'PERENCANA',
+  'PENERJEMAH',
+  'ANALIS SUMBER DAYA MANUSIA APARATUR',
+  'PRANATA SUMBER DAYA MANUSIA APARATUR',
+  'ASESOR SDM APARATUR',
+  'ANALIS PENGEMBANGAN KOMPETENSI APARATUR SIPIL NEGARA',
+  'PENATA KADASTRAL',
+  'ASISTEN PENATA KADASTRAL',
+  'PENATA PERTANAHAN',
+  'PRANATA KOMPUTER',
+  'PRANATA HUBUNGAN MASYARAKAT',
+  'PRANATA LABORATORIUM PENDIDIKAN',
+  'DOSEN',
+  'PENGGERAK SWADAYA MASYARAKAT',
+  'WIDYAISWARA',
+  'STATISTISI',
+  'SURVEYOR PEMETAAN',
+  'SANDIMAN',
+  'MANGGALA INFORMATIKA',
+  'APOTEKER',
+  'DOKTER',
+  'DOKTER GIGI',
+  'PERAWAT',
+  'PSIKOLOG KLINIS',
+  'WIDYAPRADA',
+].sort().map(v => ({ value: v, label: v }))
+
 const JENIS_PERPINDAHAN = [
   { value: 'struktural_ke_jf', label: 'Struktural ke Jabatan Fungsional' },
   { value: 'jf_a_ke_jf_b',    label: 'Jabatan Fungsional (A) ke Jabatan Fungsional (B)' },
@@ -129,16 +170,16 @@ function FormKenaikanJenjang({ data, onChange }: {
         <DropdownSelect
           value={data.dari}
           onChange={v => onChange({ ...data, dari: v })}
-          options={JENJANG_JF}
-          placeholder="Pilih jenjang asal..."
+          options={JABATAN_FUNGSIONAL_KENAIKAN}
+          placeholder="Pilih jabatan fungsional asal..."
         />
       </Field>
       <Field label="Ke Jenjang" required>
         <DropdownSelect
           value={data.ke}
           onChange={v => onChange({ ...data, ke: v })}
-          options={JENJANG_JF}
-          placeholder="Pilih jenjang tujuan..."
+          options={JABATAN_FUNGSIONAL_KENAIKAN}
+          placeholder="Pilih jabatan fungsional tujuan..."
         />
       </Field>
     </div>

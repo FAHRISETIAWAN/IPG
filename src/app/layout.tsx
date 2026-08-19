@@ -1,3 +1,4 @@
+import { AuthSessionProvider } from '@/components/auth/session-provider'
 import { ThemeProvider } from '@/components/theme-provider'
 import '@/styles/tailwind.css'
 import type { Metadata } from 'next'
@@ -22,9 +23,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="id" suppressHydrationWarning className={inter.variable}>
       <body className="font-sans antialiased">
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          {children}
-        </ThemeProvider>
+        <AuthSessionProvider>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+            {children}
+          </ThemeProvider>
+        </AuthSessionProvider>
       </body>
     </html>
   )

@@ -32,7 +32,7 @@ import {
 } from '@heroicons/react/24/solid'
 
 const SURAT_CHILDREN = [
-  { label: 'Surat Rekomendasi', href: '/surat/rekomendasi' },
+  { label: 'Rekomendasi PWK',   href: '/surat/rekomendasi' },
   { label: 'Surat Keputusan',   href: '/sk' },
   { label: 'Sertifikat',        href: '/surat/sertifikat' },
 ]
@@ -51,7 +51,6 @@ const bottomNavItems = [
   { label: 'Form',      href: '/formpermintaan',     icon: ClipboardDocumentListIcon,  iconActive: ClipboardSolid },
   { label: 'Verifikasi',href: '/verifikasi',         icon: ClipboardDocumentCheckIcon, iconActive: ClipboardCheckSolid },
   { label: 'Laporan',   href: '/laporan',            icon: ChartBarIcon,               iconActive: ChartBarSolid },
-  { label: 'Settings',  href: '/dashboard/settings', icon: Cog6ToothIcon,             iconActive: CogSolid },
 ]
 
 export function DashboardSidebar() {
@@ -110,11 +109,11 @@ export function DashboardSidebar() {
             )
           })}
 
-          {/* Surat Kepegawaian — submenu */}
+          {/* Surat Dokumen — submenu */}
           {collapsed ? (
             <div className="group relative">
               <button
-                title="Surat Kepegawaian"
+                title="Surat Dokumen"
                 onClick={() => { setCollapsed(false); setSuratOpen(true) }}
                 className={clsx(
                   'group relative flex h-10 w-10 items-center justify-center rounded-xl transition-colors',
@@ -125,7 +124,7 @@ export function DashboardSidebar() {
               >
                 {isSuratActive ? <DocumentCheckSolid className="h-5 w-5 shrink-0" /> : <DocumentCheckIcon className="h-5 w-5 shrink-0" />}
                 <span className="pointer-events-none absolute left-14 z-50 whitespace-nowrap rounded-lg bg-slate-800 px-2.5 py-1 text-xs font-medium text-slate-100 opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-                  Kepegawaian
+                  Dokumen
                 </span>
               </button>
             </div>
@@ -141,7 +140,7 @@ export function DashboardSidebar() {
                 )}
               >
                 {isSuratActive ? <DocumentCheckSolid className="h-5 w-5 shrink-0" /> : <DocumentCheckIcon className="h-5 w-5 shrink-0" />}
-                <span className="flex-1 text-left text-sm font-medium">Kepegawaian</span>
+                <span className="flex-1 text-left text-sm font-medium">Dokumen</span>
                 <ChevronDownIcon className={clsx('h-3.5 w-3.5 transition-transform duration-200', suratOpen ? 'rotate-180' : '')} />
               </button>
 
@@ -200,26 +199,8 @@ export function DashboardSidebar() {
           })}
         </nav>
 
-        {/* Bottom: Settings + collapse toggle */}
+        {/* Bottom: collapse toggle */}
         <div className={clsx('flex flex-col gap-1', collapsed ? 'items-center' : 'px-3')}>
-          <Link
-            href="/dashboard/settings"
-            title={collapsed ? 'Settings' : undefined}
-            className={clsx(
-              'group relative flex h-10 items-center rounded-xl text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200',
-              collapsed ? 'w-10 justify-center' : 'w-full gap-3 px-3'
-            )}
-          >
-            <Cog6ToothIcon className="h-5 w-5 shrink-0" />
-            {collapsed ? (
-              <span className="pointer-events-none absolute left-14 z-50 whitespace-nowrap rounded-lg bg-slate-800 px-2.5 py-1 text-xs font-medium text-slate-100 opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-                Settings
-              </span>
-            ) : (
-              <span className="text-sm font-medium">Settings</span>
-            )}
-          </Link>
-
           {/* Collapse toggle */}
           <button
             onClick={() => setCollapsed(v => !v)}

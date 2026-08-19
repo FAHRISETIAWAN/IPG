@@ -1,6 +1,10 @@
 'use client'
 
+import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline'
+import { signOut } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
+import { useRef, useState } from 'react'
 import { ThemeToggle } from './theme-toggle'
 
 const PAGE_LABELS: Record<string, string> = {
@@ -27,6 +31,16 @@ const PAGE_LABELS: Record<string, string> = {
 export function DashboardTopbar() {
   const pathname = usePathname()
   const pageLabel = PAGE_LABELS[pathname] ?? 'Halaman'
+  const { data: session } = useSession()
+  const nama = session?.user?.name ?? '-'
+  const nip  = (session as { nip?: string } | null)?.nip ?? ''
+  const initials = nama.split(' ').slice(0, 2).map((w: string) => w[0]).join('').toUpperCase()
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  const handleLogout = () => {
+    signOut({ callbackUrl: '/api/auth/logout-sso' })
+  }
 
   return (
     <header className="flex h-14 items-center justify-between bg-white px-4 dark:bg-slate-900 sm:px-6">
@@ -44,15 +58,39 @@ export function DashboardTopbar() {
       <div className="flex items-center gap-2 sm:gap-3">
         <ThemeToggle />
 
-        {/* Avatar */}
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-xs font-semibold text-white">
-            A
-          </div>
-          <div className="hidden lg:block">
-            <p className="text-xs font-medium text-slate-700 dark:text-slate-200">dr Alice</p>
-            <p className="text-[10px] text-slate-400 dark:text-slate-500">General Practitioner</p>
-          </div>
+        {/* Avatar + dropdown */}
+        <div className="relative" ref={ref}>
+          <button
+            onClick={() => setOpen(v => !v)}
+            className="flex items-center gap-2 rounded-xl px-2 py-1 transition hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-xs font-semibold text-white">
+              {initials || 'U'}
+            </div>
+            <div className="hidden lg:block text-left">
+              <p className="text-xs font-medium text-slate-700 dark:text-slate-200">{nama}</p>
+              {nip && <p className="text-[10px] text-slate-400 dark:text-slate-500">NIP {nip}</p>}
+            </div>
+          </button>
+
+          {open && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+              <div className="absolute right-0 z-50 mt-2 w-52 rounded-xl border border-slate-100 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-900">
+                <div className="border-b border-slate-100 px-4 py-3 dark:border-slate-700">
+                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">{nama}</p>
+                  {nip && <p className="mt-0.5 text-[10px] text-slate-400">NIP {nip}</p>}
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="flex w-full items-center gap-2.5 px-4 py-2.5 text-xs text-red-500 transition hover:bg-red-50 dark:hover:bg-red-900/20"
+                >
+                  <ArrowRightStartOnRectangleIcon className="h-4 w-4" />
+                  Keluar
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </header>
