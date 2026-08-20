@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const API_URL = `${process.env.INTEROP_API_URL}/persuratan`
+const API_URL = `${process.env.INTEROP_API_URL}/persuratan/cari-surat`
 const BEARER  = process.env.INTEROP_BEARER_TOKEN ?? ''
 
 export async function GET(req: NextRequest) {
