@@ -36,36 +36,9 @@ async function getKeycloakRedirect(origin: string, callbackUrl: string) {
   }
 }
 
-export async function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl
-
-  // Biarkan API routes dan login page lewat tanpa auth
-  if (pathname.startsWith('/api') || pathname === '/login') return NextResponse.next()
-
-  const token = await getToken({
-    req,
-    secret: process.env.NEXTAUTH_SECRET,
-    cookieName: 'sdm-access-token',
-  })
-
-  if (token) return NextResponse.next()
-
-  // Hanya jalankan SSO shortcut jika env sudah lengkap
-  if (process.env.KEYCLOAK_ISSUER && process.env.NEXTAUTH_SECRET) {
-    const sso = await getKeycloakRedirect(req.nextUrl.origin, req.nextUrl.pathname)
-    if (sso) {
-      const res = NextResponse.redirect(sso.url)
-      for (const cookie of sso.cookies) {
-        res.headers.append('Set-Cookie', cookie)
-      }
-      return res
-    }
-  }
-
-  // Fallback ke /login (aman meski env belum ada)
-  const loginUrl = new URL('/login', req.url)
-  loginUrl.searchParams.set('callbackUrl', req.nextUrl.href)
-  return NextResponse.redirect(loginUrl)
+export async function middleware(_req: NextRequest) {
+  // Auth dimatikan sementara — semua halaman bisa diakses tanpa login
+  return NextResponse.next()
 }
 
 export const config = {
