@@ -80,9 +80,7 @@ export default function FormPermintaanPage() {
       setSuratLoading(true)
       try {
         const params = new URLSearchParams({ no_surat: val.trim() })
-        const res = await fetch(`https://api-interop.atrbpn.go.id/manajemen/interop/api/persuratan/cari-surat?${params}`, {
-          headers: { Authorization: `Bearer ${process.env.NEXT_PUBLIC_INTEROP_BEARER_TOKEN ?? ''}` },
-        })
+        const res = await fetch(`/api/surat/cari?${params}`)
         const json = await res.json()
         const rows = Array.isArray(json) ? json : Array.isArray(json?.data) ? json.data : []
         if (!res.ok || rows.length === 0) {
