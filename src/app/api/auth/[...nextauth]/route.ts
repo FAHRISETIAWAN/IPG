@@ -18,7 +18,8 @@ const handler = NextAuth({
       issuer: process.env.KEYCLOAK_ISSUER!,
       httpOptions: { timeout: 20000 },
       profile: (profile, token) => {
-        const decoded = decodeJwt((token.access_token as string) ?? '')
+        const accessToken: string = typeof token.access_token === 'string' ? token.access_token : ''
+        const decoded = decodeJwt(accessToken)
         return {
           id: decoded?.sub ?? profile.sub,
           nip: decoded?.['atrbpn-profile']?.pegawaiid ?? '',
