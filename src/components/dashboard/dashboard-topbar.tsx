@@ -32,7 +32,7 @@ export function DashboardTopbar() {
   const pathname = usePathname()
   const pageLabel = PAGE_LABELS[pathname] ?? 'Halaman'
   const { data: session } = useSession()
-  const nama = session?.user?.name ?? '-'
+  const nama = session?.user?.name ?? 'Sultan Hasanudin'
   const nip  = (session as { nip?: string } | null)?.nip ?? ''
   const initials = nama.split(' ').slice(0, 2).map((w: string) => w[0]).join('').toUpperCase()
   const [open, setOpen] = useState(false)
