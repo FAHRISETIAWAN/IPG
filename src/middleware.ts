@@ -50,17 +50,19 @@ export async function middleware(req: NextRequest) {
 
   if (token) return NextResponse.next()
 
-  // Server-to-server: langsung redirect ke Keycloak tanpa halaman antara
-  const sso = await getKeycloakRedirect(req.nextUrl.origin, req.nextUrl.pathname)
-  if (sso) {
-    const res = NextResponse.redirect(sso.url)
-    for (const cookie of sso.cookies) {
-      res.headers.append('Set-Cookie', cookie)
+  // Hanya jalankan SSO shortcut jika env sudah lengkap
+  if (process.env.KEYCLOAK_ISSUER && process.env.NEXTAUTH_SECRET) {
+    const sso = await getKeycloakRedirect(req.nextUrl.origin, req.nextUrl.pathname)
+    if (sso) {
+      const res = NextResponse.redirect(sso.url)
+      for (const cookie of sso.cookies) {
+        res.headers.append('Set-Cookie', cookie)
+      }
+      return res
     }
-    return res
   }
 
-  // Fallback jika SSO gagal
+  // Fallback ke /login (aman meski env belum ada)
   const loginUrl = new URL('/login', req.url)
   loginUrl.searchParams.set('callbackUrl', req.nextUrl.href)
   return NextResponse.redirect(loginUrl)
