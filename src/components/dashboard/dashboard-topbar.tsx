@@ -21,6 +21,7 @@ const PAGE_LABELS: Record<string, string> = {
   '/verifikasi': 'Verifikasi Pengajuan',
   '/laporan': 'Laporan Pengajuan',
   '/pegawai': 'Manajemen Pegawai',
+  '/hukdis':  'Hukuman Disiplin',
   '/sk': 'Surat Keputusan',
   '/surat/rekomendasi': 'Surat Rekomendasi',
   '/surat/sertifikat': 'Sertifikat',

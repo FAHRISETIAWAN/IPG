@@ -16,6 +16,7 @@ import {
   DocumentCheckIcon,
   DocumentTextIcon,
   HomeIcon,
+  ShieldExclamationIcon,
   StarIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline'
@@ -28,6 +29,7 @@ import {
   DocumentCheckIcon as DocumentCheckSolid,
   DocumentTextIcon as DocumentTextSolid,
   HomeIcon as HomeSolid,
+  ShieldExclamationIcon as ShieldSolid,
   UserGroupIcon as UserGroupSolid,
 } from '@heroicons/react/24/solid'
 
@@ -43,6 +45,7 @@ const navItems = [
   { label: 'Verifikasi',      href: '/verifikasi',     icon: ClipboardDocumentCheckIcon, iconActive: ClipboardCheckSolid },
   { label: 'Perpanjangan',    href: '/perpanjangan',   icon: ArrowPathIcon,              iconActive: ArrowPathSolid },
   { label: 'Laporan',         href: '/laporan',        icon: ChartBarIcon,               iconActive: ChartBarSolid },
+  { label: 'Hukuman Disiplin',href: '/hukdis',         icon: ShieldExclamationIcon,      iconActive: ShieldSolid },
   { label: 'Pegawai',         href: '/pegawai',        icon: UserGroupIcon,              iconActive: UserGroupSolid },
 ]
 

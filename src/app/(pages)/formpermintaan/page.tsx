@@ -1,5 +1,6 @@
 'use client'
 
+import { HukdisCheckDialog, type PWKTujuan } from '@/components/form/hukdis-check-dialog'
 import { KonfirmasiDialog } from '@/components/form/konfirmasi-dialog'
 import { PegawaiMultiSelect } from '@/components/form/pegawai-multiselect'
 import type { Pegawai } from '@/data/pegawai-data'
@@ -67,6 +68,7 @@ export default function FormPermintaanPage() {
   const [suratError, setSuratError] = useState('')
   const [suratLoading, setSuratLoading] = useState(false)
   const [pegawai, setPegawai] = useState<Pegawai[]>([])
+  const [showHukdisCheck, setShowHukdisCheck] = useState(false)
   const [showKonfirmasi, setShowKonfirmasi] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -107,6 +109,11 @@ export default function FormPermintaanPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setShowHukdisCheck(true)
+  }
+
+  const handleHukdisConfirm = (_extra?: PWKTujuan[]) => {
+    setShowHukdisCheck(false)
     setShowKonfirmasi(true)
   }
 
@@ -114,6 +121,13 @@ export default function FormPermintaanPage() {
 
   return (
     <>
+    <HukdisCheckDialog
+      open={showHukdisCheck}
+      onClose={() => setShowHukdisCheck(false)}
+      onConfirm={handleHukdisConfirm}
+      pegawai={pegawai}
+      layanan={layanan}
+    />
     <KonfirmasiDialog
       open={showKonfirmasi}
       onClose={() => setShowKonfirmasi(false)}
