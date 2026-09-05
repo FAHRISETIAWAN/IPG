@@ -5,14 +5,13 @@ import type { Pegawai } from '@/data/pegawai-data'
 import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
-  MagnifyingGlassIcon,
   ShieldExclamationIcon,
   XCircleIcon,
 } from '@heroicons/react/24/outline'
 import { CheckCircleIcon as CheckSolid } from '@heroicons/react/24/solid'
 import * as Headless from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export interface PWKTujuan {
   nip: string
@@ -29,163 +28,6 @@ interface Props {
 
 type Phase = 'checking' | 'blocked' | 'syarat'
 
-const DAFTAR_KANTAH = [
-  'Kantah Kota Administrasi Jakarta Pusat',
-  'Kantah Kota Administrasi Jakarta Utara',
-  'Kantah Kota Administrasi Jakarta Barat',
-  'Kantah Kota Administrasi Jakarta Selatan',
-  'Kantah Kota Administrasi Jakarta Timur',
-  'Kantah Kabupaten Administrasi Kepulauan Seribu',
-  'Kantah Kota Bogor',
-  'Kantah Kabupaten Bogor',
-  'Kantah Kota Depok',
-  'Kantah Kota Bekasi',
-  'Kantah Kabupaten Bekasi',
-  'Kantah Kota Tangerang',
-  'Kantah Kota Tangerang Selatan',
-  'Kantah Kabupaten Tangerang',
-  'Kantah Kota Bandung',
-  'Kantah Kabupaten Bandung',
-  'Kantah Kabupaten Bandung Barat',
-  'Kantah Kota Cimahi',
-  'Kantah Kota Cirebon',
-  'Kantah Kabupaten Cirebon',
-  'Kantah Kabupaten Garut',
-  'Kantah Kabupaten Sukabumi',
-  'Kantah Kota Sukabumi',
-  'Kantah Kabupaten Cianjur',
-  'Kantah Kabupaten Tasikmalaya',
-  'Kantah Kota Tasikmalaya',
-  'Kantah Kabupaten Ciamis',
-  'Kantah Kota Banjar',
-  'Kantah Kabupaten Kuningan',
-  'Kantah Kabupaten Majalengka',
-  'Kantah Kabupaten Sumedang',
-  'Kantah Kabupaten Indramayu',
-  'Kantah Kabupaten Subang',
-  'Kantah Kabupaten Purwakarta',
-  'Kantah Kabupaten Karawang',
-  'Kantah Kabupaten Pangandaran',
-  'Kantah Kota Semarang',
-  'Kantah Kabupaten Semarang',
-  'Kantah Kota Surakarta',
-  'Kantah Kota Yogyakarta',
-  'Kantah Kabupaten Sleman',
-  'Kantah Kabupaten Bantul',
-  'Kantah Kabupaten Kulon Progo',
-  'Kantah Kabupaten Gunungkidul',
-  'Kantah Kota Surabaya',
-  'Kantah Kabupaten Sidoarjo',
-  'Kantah Kabupaten Gresik',
-  'Kantah Kota Malang',
-  'Kantah Kabupaten Malang',
-  'Kantah Kota Batu',
-  'Kantah Kota Medan',
-  'Kantah Kabupaten Deli Serdang',
-  'Kantah Kota Makassar',
-  'Kantah Kota Denpasar',
-  'Kantah Kabupaten Badung',
-  'Kantah Kota Balikpapan',
-  'Kantah Kota Samarinda',
-  'Kantah Kota Banjarmasin',
-  'Kantah Kota Palembang',
-  'Kantah Kota Pekanbaru',
-  'Kantah Kota Padang',
-  'Kantah Kota Batam',
-  'Kantah Kota Pontianak',
-  'Kantah Kota Manado',
-  'Kantah Kota Ambon',
-  'Kantah Kota Jayapura',
-].sort()
-
-function KantahCombobox({ value, onChange }: { value: string; onChange: (v: string) => void }) {
-  const [query, setQuery] = useState(value)
-  const [open, setOpen] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
-
-  const filtered = query.trim().length === 0
-    ? DAFTAR_KANTAH
-    : DAFTAR_KANTAH.filter(k => k.toLowerCase().includes(query.toLowerCase()))
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
-    }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [])
-
-  const handleSelect = (k: string) => {
-    setQuery(k)
-    onChange(k)
-    setOpen(false)
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value)
-    onChange('')
-    setOpen(true)
-  }
-
-  return (
-    <div ref={ref} className="relative">
-      <div className={`flex h-10 items-center rounded-xl border px-3 text-sm transition ${
-        open
-          ? 'border-indigo-500 bg-white ring-1 ring-indigo-500 dark:border-indigo-500 dark:bg-slate-800'
-          : 'border-slate-200 bg-white dark:border-slate-600 dark:bg-slate-800'
-      }`}>
-        <MagnifyingGlassIcon className="mr-2 h-4 w-4 shrink-0 text-slate-400" />
-        <input
-          type="text"
-          value={query}
-          onChange={handleChange}
-          onFocus={() => setOpen(true)}
-          placeholder="Ketik nama kantah..."
-          className="flex-1 bg-transparent text-slate-700 placeholder-slate-400 outline-none dark:text-slate-200 dark:placeholder-slate-500"
-        />
-        {query && (
-          <button
-            type="button"
-            onClick={() => { setQuery(''); onChange(''); setOpen(true) }}
-            className="ml-1 text-slate-300 hover:text-slate-500 dark:text-slate-600 dark:hover:text-slate-400"
-          >
-            ×
-          </button>
-        )}
-      </div>
-
-      <AnimatePresence>
-        {open && filtered.length > 0 && (
-          <motion.ul
-            initial={{ opacity: 0, y: -4, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, scale: 0.97 }}
-            transition={{ duration: 0.13 }}
-            className="absolute left-0 top-full z-[60] mt-1.5 max-h-48 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white py-1 shadow-lg [scrollbar-width:none] [&::-webkit-scrollbar]:hidden dark:border-slate-700 dark:bg-slate-800"
-          >
-            {filtered.map(k => (
-              <li key={k}>
-                <button
-                  type="button"
-                  onMouseDown={e => e.preventDefault()}
-                  onClick={() => handleSelect(k)}
-                  className={`flex w-full items-center justify-between px-3.5 py-2 text-sm transition ${
-                    k === value
-                      ? 'bg-indigo-50 font-semibold text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400'
-                      : 'text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700/50'
-                  }`}
-                >
-                  {k}
-                  {k === value && <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" />}
-                </button>
-              </li>
-            ))}
-          </motion.ul>
-        )}
-      </AnimatePresence>
-    </div>
-  )
-}
 
 // Cek hukdis aktif atau dalam 2 tahun terakhir
 function cekHukdis(pegawai: Pegawai[]) {
@@ -220,19 +62,15 @@ function cekHukdis(pegawai: Pegawai[]) {
   })
 }
 
-export function HukdisCheckDialog({ open, onClose, onConfirm, pegawai, layanan }: Props) {
+export function HukdisCheckDialog({ open, onClose, onConfirm, pegawai }: Props) {
   const [phase, setPhase] = useState<Phase>('checking')
   const [results, setResults] = useState<ReturnType<typeof cekHukdis>>([])
   const [agreed, setAgreed] = useState(false)
-  const [pwkTujuan, setPwkTujuan] = useState<Record<string, string>>({})
-
-  const isPWK = layanan === 'PWK'
 
   useEffect(() => {
     if (!open) return
     setPhase('checking')
     setAgreed(false)
-    setPwkTujuan({} as Record<string, string>)
 
     const timer = setTimeout(() => {
       const res = cekHukdis(pegawai)
@@ -244,9 +82,7 @@ export function HukdisCheckDialog({ open, onClose, onConfirm, pegawai, layanan }
     return () => clearTimeout(timer)
   }, [open, pegawai])
 
-  const allPwkFilled = !isPWK || pegawai.every(p => (pwkTujuan[p.nip] ?? '').trim().length > 0)
-
-  const canConfirm = agreed && allPwkFilled
+  const canConfirm = agreed
 
   return (
     <Headless.Dialog open={open} onClose={onClose}>
@@ -342,23 +178,6 @@ export function HukdisCheckDialog({ open, onClose, onConfirm, pegawai, layanan }
                     </ul>
 
                     {/* Fields khusus PWK — per pegawai */}
-                    {isPWK && (
-                      <div className="mt-4 space-y-3">
-                        {pegawai.map(p => (
-                          <div key={p.nip} className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/50">
-                            <p className="mb-2 text-xs font-semibold text-slate-700 dark:text-slate-200">{p.nama}</p>
-                            <label className="mb-1 block text-xs font-medium text-slate-500 dark:text-slate-400">
-                              Kantah Tujuan <span className="text-red-500">*</span>
-                            </label>
-                            <KantahCombobox
-                              value={pwkTujuan[p.nip] ?? ''}
-                              onChange={v => setPwkTujuan(prev => ({ ...prev, [p.nip]: v }))}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
                     {/* Pernyataan checkbox */}
                     <div className="mt-4 pb-1">
                       <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 dark:border-slate-700 dark:bg-slate-800/50">
@@ -396,17 +215,7 @@ export function HukdisCheckDialog({ open, onClose, onConfirm, pegawai, layanan }
                     </button>
                     <button
                       disabled={!canConfirm}
-                      onClick={() => {
-                        if (isPWK) {
-                          const extra = pegawai.map(p => ({
-                            nip: p.nip,
-                            kantahTujuan: pwkTujuan[p.nip] ?? '',
-                          }))
-                          onConfirm(extra)
-                        } else {
-                          onConfirm()
-                        }
-                      }}
+                      onClick={() => onConfirm()}
                       className="flex-1 rounded-xl bg-indigo-600 py-3 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       Lanjutkan

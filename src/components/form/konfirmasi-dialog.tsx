@@ -1,12 +1,9 @@
 'use client'
 
 import * as Headless from '@headlessui/react'
-import {
-  CheckCircleIcon,
-  XCircleIcon,
-} from '@heroicons/react/24/outline'
+import { XCircleIcon } from '@heroicons/react/24/outline'
 import { CheckCircleIcon as CheckSolid } from '@heroicons/react/24/solid'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import type { Pegawai } from '@/data/pegawai-data'
@@ -86,32 +83,15 @@ function formatTanggal() {
 }
 
 export function KonfirmasiDialog({ open, onClose, data }: Props) {
-  const [phase, setPhase] = useState<'checking' | 'result'>('checking')
-  const [visibleCount, setVisibleCount] = useState(0)
   const [countdown, setCountdown] = useState(3)
   const checks = buildChecks(data)
   const allValid = checks.every((c) => c.valid)
   const kode = generateKode(data.layanan || 'PMJ')
   const router = useRouter()
 
-  // Reset dan jalankan animasi tiap kali dialog dibuka
+  // Countdown redirect setelah dialog dibuka dan valid
   useEffect(() => {
-    if (!open) return
-    setPhase('checking')
-    setVisibleCount(0)
-
-    const timers: ReturnType<typeof setTimeout>[] = []
-    checks.forEach((_, i) => {
-      timers.push(setTimeout(() => setVisibleCount(i + 1), 400 + i * 500))
-    })
-    timers.push(setTimeout(() => setPhase('result'), 400 + checks.length * 500 + 300))
-    return () => timers.forEach(clearTimeout)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open])
-
-  // Countdown redirect setelah result sukses
-  useEffect(() => {
-    if (phase !== 'result' || !allValid) return
+    if (!open || !allValid) return
     setCountdown(3)
     const interval = setInterval(() => {
       setCountdown((c) => {
@@ -139,7 +119,7 @@ export function KonfirmasiDialog({ open, onClose, data }: Props) {
     }, 3000)
     return () => { clearInterval(interval); clearTimeout(redirectTimer) }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, allValid])
+  }, [open, allValid])
 
   return (
     <Headless.Dialog open={open} onClose={onClose}>
@@ -155,61 +135,11 @@ export function KonfirmasiDialog({ open, onClose, data }: Props) {
           className="w-full max-w-md overflow-hidden"
         >
         <Headless.DialogPanel className="w-full overflow-hidden rounded-2xl bg-white shadow-xl dark:bg-slate-900">
-          <AnimatePresence mode="wait">
-            {/* ── PHASE: CHECKING ── */}
-            {phase === 'checking' && (
-              <motion.div
-                key="checking"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="px-6 py-6"
-              >
-                <p className="mb-4 text-sm font-semibold text-slate-700 dark:text-slate-200">
-                  Memeriksa data pengajuan...
-                </p>
-                <ul className="space-y-3">
-                  {checks.map((item, i) => (
-                    <motion.li
-                      key={item.label}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={visibleCount > i ? { opacity: 1, x: 0 } : {}}
-                      transition={{ duration: 0.3 }}
-                      className="flex items-start gap-3"
-                    >
-                      {visibleCount > i ? (
-                        item.valid ? (
-                          <CheckCircleIcon className="mt-0.5 h-5 w-5 shrink-0 text-emerald-500" />
-                        ) : (
-                          <XCircleIcon className="mt-0.5 h-5 w-5 shrink-0 text-red-500" />
-                        )
-                      ) : (
-                        <span className="mt-1 h-4 w-4 shrink-0 animate-pulse rounded-full bg-slate-200 dark:bg-slate-700" />
-                      )}
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
-                          {item.label}
-                        </p>
-                        {visibleCount > i && (
-                          <p className={`mt-0.5 text-xs ${item.valid ? 'text-slate-400' : 'text-red-500'}`}>
-                            {item.detail}
-                          </p>
-                        )}
-                      </div>
-                    </motion.li>
-                  ))}
-                </ul>
-              </motion.div>
-            )}
-
-            {/* ── PHASE: RESULT ── */}
-            {phase === 'result' && (
-              <motion.div
-                key="result"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.25 }}
-              >
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+          >
                 {allValid ? (
                   /* SUCCESS */
                   <>
@@ -332,9 +262,7 @@ export function KonfirmasiDialog({ open, onClose, data }: Props) {
                     </div>
                   </>
                 )}
-              </motion.div>
-            )}
-          </AnimatePresence>
+          </motion.div>
         </Headless.DialogPanel>
         </motion.div>
       </div>

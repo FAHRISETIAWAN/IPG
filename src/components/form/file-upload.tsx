@@ -1,6 +1,6 @@
 'use client'
 
-import { DocumentIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ArrowUpTrayIcon } from '@heroicons/react/24/solid'
 import { useRef, useState } from 'react'
 
@@ -64,8 +64,10 @@ export function FileUpload({ label, required, accept = ACCEPTED_TYPES, value, on
 
       {value ? (
         /* File terpilih */
-        <div className="flex items-center gap-3 rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-3 dark:border-indigo-800/50 dark:bg-indigo-900/20">
-          <DocumentIcon className="h-8 w-8 shrink-0 text-indigo-500" />
+        <div className="flex items-center gap-3 rounded-xl border border-indigo-200 bg-indigo-50 px-3 py-2.5 dark:border-indigo-800/50 dark:bg-indigo-900/20">
+          <div className="flex h-9 w-9 shrink-0 flex-col items-center justify-center rounded-lg bg-red-500 shadow-sm">
+            <span className="text-[9px] font-bold leading-none tracking-wide text-white">PDF</span>
+          </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium text-slate-700 dark:text-slate-200">{value.name}</p>
             <p className="text-xs text-slate-400">{formatSize(value.size)}</p>

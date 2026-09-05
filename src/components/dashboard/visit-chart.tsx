@@ -46,7 +46,7 @@ export function VisitChart() {
   const yLabels = [5, 10, 15]
 
   return (
-    <div className="rounded-2xl bg-white p-4 ring-1 ring-slate-200 dark:bg-slate-800 dark:ring-0 sm:p-5">
+    <div className="h-full rounded-2xl bg-white p-4 dark:bg-slate-800 sm:p-5">
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200">

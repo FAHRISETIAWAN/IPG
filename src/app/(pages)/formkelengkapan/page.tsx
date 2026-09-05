@@ -2,9 +2,12 @@
 
 import { FileUpload } from '@/components/form/file-upload'
 import { daftarPegawai } from '@/data/pegawai-data'
+import { daftarPWK } from '@/data/pwk-data'
 import {
   CheckCircleIcon,
   ChevronRightIcon,
+  DocumentIcon,
+  PaperClipIcon,
 } from '@heroicons/react/24/outline'
 import { CheckCircleIcon as CheckSolid } from '@heroicons/react/24/solid'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -175,8 +178,12 @@ function FormKelengkapanContent() {
     return base
   }
 
-  const [step, setStep]       = useState(0)
+  const isPWK = layanan === 'PWK'
+
+  const [step, setStep]           = useState(0)
   const [submitted, setSubmitted] = useState(false)
+  // T&C checkbox per pegawai (PWK only)
+  const [pwkAgreed, setPwkAgreed] = useState<boolean[]>(list.map(() => false))
 
   // files per pegawai: array of Record<key, File|null>
   const [allFiles, setAllFiles] = useState<Record<string, File | null>[]>(
@@ -194,10 +201,16 @@ function FormKelengkapanContent() {
   }
 
   const uploadedCount  = (f: Record<string, File | null>) => Object.values(f).filter(Boolean).length
-  const isComplete     = (f: Record<string, File | null>, idx: number) =>
-    getDocsForStep(idx).every(d => !d.required || f[d.key])
+  const isComplete     = (f: Record<string, File | null>, idx: number) => {
+    if (isPWK) return pwkAgreed[idx] ?? false
+    return getDocsForStep(idx).every(d => !d.required || f[d.key])
+  }
   const totalDokumen   = allFiles.reduce((s, f) => s + uploadedCount(f), 0)
   const isLast         = step === list.length - 1
+
+  // Cari dokumen PWK dari daftarPWK per NIP
+  const getPWKDokumen = (nip: string) =>
+    daftarPWK.find(r => r.pegawai.nip === nip)?.dokumen ?? []
 
   const handleNext = () => {
     if (!isLast) { setStep(step + 1) }
@@ -280,46 +293,107 @@ function FormKelengkapanContent() {
             </div>
 
             {/* Progress ring */}
-            <div className="flex items-center gap-3 self-start rounded-xl border border-slate-100 bg-slate-50 px-4 py-2.5 dark:border-slate-700 dark:bg-slate-800 sm:self-auto">
-              <div className="text-right">
-                <p className="text-xs text-slate-400">Dokumen</p>
-                <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                  {uploadedCount(currentFiles)} / {docs.length}
-                </p>
+            {isPWK ? (
+              <div className={`flex items-center gap-2 self-start rounded-xl border px-4 py-2.5 sm:self-auto ${pwkAgreed[step] ? 'border-emerald-200 bg-emerald-50 dark:border-emerald-800/30 dark:bg-emerald-900/10' : 'border-slate-100 bg-slate-50 dark:border-slate-700 dark:bg-slate-800'}`}>
+                {pwkAgreed[step]
+                  ? <CheckCircleIcon className="h-5 w-5 text-emerald-500" />
+                  : <PaperClipIcon className="h-5 w-5 text-slate-400" />}
+                <span className={`text-xs font-medium ${pwkAgreed[step] ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-500 dark:text-slate-400'}`}>
+                  {pwkAgreed[step] ? 'Disetujui' : 'Menunggu persetujuan'}
+                </span>
               </div>
-              <div className="relative h-10 w-10">
-                <svg className="h-10 w-10 -rotate-90" viewBox="0 0 36 36">
-                  <circle cx="18" cy="18" r="15" fill="none" stroke="#e2e8f0" strokeWidth="3" className="dark:stroke-slate-700" />
-                  <circle cx="18" cy="18" r="15" fill="none" stroke="#6366f1" strokeWidth="3"
-                    strokeDasharray={`${(uploadedCount(currentFiles) / docs.length) * 94.2} 94.2`}
-                    strokeLinecap="round"
-                  />
-                </svg>
-                {isComplete(currentFiles, step) && <CheckCircleIcon className="absolute inset-0 m-auto h-5 w-5 text-indigo-500" />}
+            ) : (
+              <div className="flex items-center gap-3 self-start rounded-xl border border-slate-100 bg-slate-50 px-4 py-2.5 dark:border-slate-700 dark:bg-slate-800 sm:self-auto">
+                <div className="text-right">
+                  <p className="text-xs text-slate-400">Dokumen</p>
+                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                    {uploadedCount(currentFiles)} / {docs.length}
+                  </p>
+                </div>
+                <div className="relative h-10 w-10">
+                  <svg className="h-10 w-10 -rotate-90" viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="#e2e8f0" strokeWidth="3" className="dark:stroke-slate-700" />
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="#6366f1" strokeWidth="3"
+                      strokeDasharray={`${(uploadedCount(currentFiles) / docs.length) * 94.2} 94.2`}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  {isComplete(currentFiles, step) && <CheckCircleIcon className="absolute inset-0 m-auto h-5 w-5 text-indigo-500" />}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
-          {/* Upload fields */}
-          <div className="grid grid-cols-1 gap-5 px-6 py-6 sm:grid-cols-2">
-            {docs.map((doc, idx) => {
-              const isFullWidth = layanan !== 'PWK' && layanan !== 'UJIKOM' && (doc.key === 'permohonan' || doc.key === 'pengantar')
-              const isLastOdd   = docs.length % 2 !== 0 && idx === docs.length - 1
-              return (
-              <div key={doc.key} className={isFullWidth || isLastOdd ? 'sm:col-span-2' : ''}>
-                <FileUpload
-                  label={doc.label}
-                  required={doc.required}
-                  value={currentFiles[doc.key]}
-                  onChange={file => setFile(doc.key, file)}
-                />
-                {doc.note && (
-                  <p className="mt-1 text-[11px] text-slate-400">{doc.note}</p>
-                )}
+          {/* Body */}
+          {isPWK ? (
+            /* ── PWK: tampilkan dokumen dari menu PWK, tidak perlu upload ulang ── */
+            <div className="px-6 pb-6">
+              {/* Daftar dokumen */}
+              <p className="mb-3 text-xs font-medium text-slate-500 dark:text-slate-400">
+                Dokumen yang telah diunggah di menu PWK
+              </p>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {DOCS_PWK.map(doc => {
+                  const pwkDok = getPWKDokumen(current.nip)
+                  const found  = pwkDok.find(d => d.nama.toLowerCase().includes(doc.key === 'bebas_hukdis' ? 'hukdis' : doc.key === 'bebas_tunggakan' ? 'tunggakan' : doc.key === 'eviden' ? 'eviden' : doc.label.split(' ')[1]?.toLowerCase() ?? ''))
+                    ?? pwkDok[DOCS_PWK.findIndex(d => d.key === doc.key)]
+                  return (
+                    <div key={doc.key} className={`flex items-center gap-3 rounded-xl border px-4 py-3 ${found ? 'border-emerald-100 bg-emerald-50 dark:border-emerald-800/30 dark:bg-emerald-900/10' : 'border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50'}`}>
+                      {found
+                        ? <CheckCircleIcon className="h-4 w-4 shrink-0 text-emerald-500" />
+                        : <DocumentIcon className="h-4 w-4 shrink-0 text-slate-400" />}
+                      <div className="min-w-0">
+                        <p className={`text-xs font-medium ${found ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-500 dark:text-slate-400'}`}>{doc.label}</p>
+                        {found && <p className="truncate text-[10px] text-slate-400">{found.nama} · {found.ukuran}</p>}
+                        {!found && <p className="text-[10px] text-amber-500">Belum diunggah</p>}
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
-              )
-            })}
-          </div>
+
+              {/* Checkbox T&C kesesuaian dokumen */}
+              <label className="mt-5 flex cursor-pointer items-start gap-3 rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-3.5 dark:border-indigo-800/40 dark:bg-indigo-900/10">
+                <div className="relative mt-0.5 shrink-0">
+                  <input
+                    type="checkbox"
+                    checked={pwkAgreed[step] ?? false}
+                    onChange={e => setPwkAgreed(prev => { const n = [...prev]; n[step] = e.target.checked; return n })}
+                    className="sr-only"
+                  />
+                  <div className={`flex h-4 w-4 items-center justify-center rounded border-2 transition ${pwkAgreed[step] ? 'border-indigo-600 bg-indigo-600' : 'border-slate-300 bg-white dark:border-slate-600 dark:bg-slate-700'}`}>
+                    {pwkAgreed[step] && (
+                      <svg className="h-2.5 w-2.5 text-white" fill="none" viewBox="0 0 12 12">
+                        <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                  </div>
+                </div>
+                <span className="text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+                  Saya menyatakan bahwa dokumen yang tertera di atas telah <strong>sesuai, lengkap, dan dapat dipertanggungjawabkan</strong> kebenarannya untuk proses pengajuan Pindah Wilayah Kerja pegawai ini.
+                </span>
+              </label>
+            </div>
+          ) : (
+            /* ── Non-PWK: upload per dokumen ── */
+            <div className="grid grid-cols-1 gap-5 px-6 py-6 sm:grid-cols-2">
+              {docs.map((doc, idx) => {
+                const isFullWidth = layanan !== 'UJIKOM' && (doc.key === 'permohonan' || doc.key === 'pengantar')
+                const isLastOdd   = docs.length % 2 !== 0 && idx === docs.length - 1
+                return (
+                  <div key={doc.key} className={isFullWidth || isLastOdd ? 'sm:col-span-2' : ''}>
+                    <FileUpload
+                      label={doc.label}
+                      required={doc.required}
+                      value={currentFiles[doc.key]}
+                      onChange={file => setFile(doc.key, file)}
+                    />
+                    {doc.note && <p className="mt-1 text-[11px] text-slate-400">{doc.note}</p>}
+                  </div>
+                )
+              })}
+            </div>
+          )}
 
           {/* Footer */}
           <div className="flex items-center justify-between px-6 py-4">

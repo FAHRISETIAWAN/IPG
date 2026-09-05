@@ -6,54 +6,97 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import {
   ArrowPathIcon,
+  ArrowsRightLeftIcon,
   ChartBarIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
-  ChevronRightIcon,
   ClipboardDocumentCheckIcon,
   ClipboardDocumentListIcon,
-  Cog6ToothIcon,
   DocumentCheckIcon,
-  DocumentTextIcon,
   HomeIcon,
   ShieldExclamationIcon,
-  StarIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline'
 import {
   ArrowPathIcon as ArrowPathSolid,
+  ArrowsRightLeftIcon as ArrowsRightLeftSolid,
   ChartBarIcon as ChartBarSolid,
   ClipboardDocumentCheckIcon as ClipboardCheckSolid,
   ClipboardDocumentListIcon as ClipboardSolid,
-  Cog6ToothIcon as CogSolid,
   DocumentCheckIcon as DocumentCheckSolid,
-  DocumentTextIcon as DocumentTextSolid,
   HomeIcon as HomeSolid,
   ShieldExclamationIcon as ShieldSolid,
   UserGroupIcon as UserGroupSolid,
 } from '@heroicons/react/24/solid'
 
 const SURAT_CHILDREN = [
-  { label: 'Rekomendasi PWK',   href: '/surat/rekomendasi' },
-  { label: 'Surat Keputusan',   href: '/sk' },
-  { label: 'Sertifikat',        href: '/surat/sertifikat' },
+  { label: 'Rekomendasi PWK', href: '/surat/rekomendasi' },
+  { label: 'Surat Keputusan', href: '/sk' },
+  { label: 'Sertifikat',      href: '/surat/sertifikat' },
 ]
 
 const navItems = [
-  { label: 'Dashboard',       href: '/dashboard',      icon: HomeIcon,                   iconActive: HomeSolid },
-  { label: 'Form Permintaan', href: '/formpermintaan', icon: ClipboardDocumentListIcon,  iconActive: ClipboardSolid },
-  { label: 'Verifikasi',      href: '/verifikasi',     icon: ClipboardDocumentCheckIcon, iconActive: ClipboardCheckSolid },
-  { label: 'Perpanjangan',    href: '/perpanjangan',   icon: ArrowPathIcon,              iconActive: ArrowPathSolid },
-  { label: 'Laporan',         href: '/laporan',        icon: ChartBarIcon,               iconActive: ChartBarSolid },
-  { label: 'Hukuman Disiplin',href: '/hukdis',         icon: ShieldExclamationIcon,      iconActive: ShieldSolid },
-  { label: 'Pegawai',         href: '/pegawai',        icon: UserGroupIcon,              iconActive: UserGroupSolid },
+  {
+    label: 'Dashboard',       href: '/dashboard',
+    icon: HomeIcon,           iconActive: HomeSolid,
+    color: 'bg-indigo-500',   colorLight: 'bg-indigo-50 text-indigo-600',
+    activeText: 'text-indigo-600',
+  },
+  {
+    label: 'Form Permintaan', href: '/formpermintaan',
+    icon: ClipboardDocumentListIcon, iconActive: ClipboardSolid,
+    color: 'bg-violet-500',   colorLight: 'bg-violet-50 text-violet-600',
+    activeText: 'text-violet-600',
+  },
+  {
+    label: 'PWK',             href: '/pwk',
+    icon: ArrowsRightLeftIcon, iconActive: ArrowsRightLeftSolid,
+    color: 'bg-sky-500',      colorLight: 'bg-sky-50 text-sky-600',
+    activeText: 'text-sky-600',
+  },
+  {
+    label: 'Verifikasi',      href: '/verifikasi',
+    icon: ClipboardDocumentCheckIcon, iconActive: ClipboardCheckSolid,
+    color: 'bg-emerald-500',  colorLight: 'bg-emerald-50 text-emerald-600',
+    activeText: 'text-emerald-600',
+  },
+  {
+    label: 'Perpanjangan',    href: '/perpanjangan',
+    icon: ArrowPathIcon,      iconActive: ArrowPathSolid,
+    color: 'bg-amber-500',    colorLight: 'bg-amber-50 text-amber-600',
+    activeText: 'text-amber-600',
+  },
+  {
+    label: 'Laporan',         href: '/laporan',
+    icon: ChartBarIcon,       iconActive: ChartBarSolid,
+    color: 'bg-orange-500',   colorLight: 'bg-orange-50 text-orange-600',
+    activeText: 'text-orange-600',
+  },
+  {
+    label: 'Hukuman Disiplin', href: '/hukdis',
+    icon: ShieldExclamationIcon, iconActive: ShieldSolid,
+    color: 'bg-red-500',      colorLight: 'bg-red-50 text-red-600',
+    activeText: 'text-red-600',
+  },
+  {
+    label: 'Pegawai',         href: '/pegawai',
+    icon: UserGroupIcon,      iconActive: UserGroupSolid,
+    color: 'bg-teal-500',     colorLight: 'bg-teal-50 text-teal-600',
+    activeText: 'text-teal-600',
+  },
 ]
 
+const dokumenColor = {
+  color: 'bg-pink-500',
+  colorLight: 'bg-pink-50 text-pink-600',
+  activeText: 'text-pink-600',
+}
+
 const bottomNavItems = [
-  { label: 'Dashboard', href: '/dashboard',          icon: HomeIcon,                   iconActive: HomeSolid },
-  { label: 'Form',      href: '/formpermintaan',     icon: ClipboardDocumentListIcon,  iconActive: ClipboardSolid },
-  { label: 'Verifikasi',href: '/verifikasi',         icon: ClipboardDocumentCheckIcon, iconActive: ClipboardCheckSolid },
-  { label: 'Laporan',   href: '/laporan',            icon: ChartBarIcon,               iconActive: ChartBarSolid },
+  { label: 'Dashboard', href: '/dashboard',      icon: HomeIcon,                   iconActive: HomeSolid,         color: 'text-indigo-600' },
+  { label: 'Form',      href: '/formpermintaan', icon: ClipboardDocumentListIcon,  iconActive: ClipboardSolid,    color: 'text-violet-600' },
+  { label: 'Verifikasi',href: '/verifikasi',     icon: ClipboardDocumentCheckIcon, iconActive: ClipboardCheckSolid, color: 'text-emerald-600' },
+  { label: 'Laporan',   href: '/laporan',        icon: ChartBarIcon,               iconActive: ChartBarSolid,     color: 'text-orange-600' },
 ]
 
 export function DashboardSidebar() {
@@ -68,22 +111,38 @@ export function DashboardSidebar() {
       <aside
         className={clsx(
           'hidden flex-col bg-white py-6 transition-all duration-200 dark:bg-slate-900 lg:flex',
-          collapsed ? 'w-16 items-center' : 'w-56 items-stretch'
+          collapsed ? 'w-16 items-center' : 'w-60 items-stretch'
         )}
       >
         {/* Logo */}
         <div className={clsx('mb-8 flex shrink-0', collapsed ? 'justify-center' : 'items-center gap-2.5 px-4')}>
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600">
-            <span className="text-sm font-bold text-white">IP</span>
-          </div>
-          {!collapsed && (
-            <span className="text-sm font-bold text-slate-800 dark:text-slate-100">Layanan Pegawai</span>
+          {collapsed ? (
+            <button
+              onClick={() => setCollapsed(false)}
+              title="Perluas sidebar"
+              className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 transition hover:bg-indigo-500"
+            >
+              <span className="text-sm font-bold text-white">IP</span>
+            </button>
+          ) : (
+            <>
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600">
+                <span className="text-sm font-bold text-white">IP</span>
+              </div>
+              <span className="flex-1 text-sm font-bold text-slate-800 dark:text-slate-100">Layanan Pegawai</span>
+              <button
+                onClick={() => setCollapsed(true)}
+                title="Ciutkan sidebar"
+                className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800"
+              >
+                <ChevronLeftIcon className="h-4 w-4" />
+              </button>
+            </>
           )}
         </div>
 
         {/* Nav */}
-        <nav className={clsx('flex flex-1 flex-col gap-1', collapsed ? 'items-center' : 'px-3')}>
-          {/* Dashboard, Form Permintaan, Verifikasi */}
+        <nav className={clsx('flex flex-1 flex-col gap-0.5', collapsed ? 'items-center' : 'px-3')}>
           {navItems.slice(0, 3).map((item) => {
             const isActive = pathname === item.href
             const Icon = isActive ? item.iconActive : item.icon
@@ -94,38 +153,47 @@ export function DashboardSidebar() {
                 title={collapsed ? item.label : undefined}
                 className={clsx(
                   'group relative flex h-10 items-center rounded-xl transition-colors',
-                  collapsed ? 'w-10 justify-center' : 'w-full gap-3 px-3',
+                  collapsed ? 'w-10 justify-center' : 'w-full gap-3 px-2',
                   isActive
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200'
+                    ? `${item.colorLight} dark:bg-opacity-20`
+                    : 'hover:bg-slate-50 dark:hover:bg-slate-800'
                 )}
               >
-                <Icon className="h-5 w-5 shrink-0" />
+                <span className={clsx(
+                  'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg',
+                  isActive ? item.color : 'bg-slate-100 dark:bg-slate-700'
+                )}>
+                  <Icon className={clsx('h-4 w-4', isActive ? 'text-white' : 'text-slate-500 dark:text-slate-400')} />
+                </span>
                 {collapsed ? (
                   <span className="pointer-events-none absolute left-14 z-50 whitespace-nowrap rounded-lg bg-slate-800 px-2.5 py-1 text-xs font-medium text-slate-100 opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
                     {item.label}
                   </span>
                 ) : (
-                  <span className="text-sm font-medium">{item.label}</span>
+                  <span className={clsx('text-sm font-medium', isActive ? item.activeText : 'text-slate-600 dark:text-slate-300')}>
+                    {item.label}
+                  </span>
                 )}
               </Link>
             )
           })}
 
-          {/* Surat Dokumen — submenu */}
+          {/* Dokumen — submenu */}
           {collapsed ? (
             <div className="group relative">
               <button
-                title="Surat Dokumen"
+                title="Dokumen"
                 onClick={() => { setCollapsed(false); setSuratOpen(true) }}
                 className={clsx(
-                  'group relative flex h-10 w-10 items-center justify-center rounded-xl transition-colors',
-                  isSuratActive
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200'
+                  'flex h-10 w-10 items-center justify-center rounded-xl transition-colors',
+                  isSuratActive ? `${dokumenColor.colorLight} dark:bg-opacity-20` : 'hover:bg-slate-50 dark:hover:bg-slate-800'
                 )}
               >
-                {isSuratActive ? <DocumentCheckSolid className="h-5 w-5 shrink-0" /> : <DocumentCheckIcon className="h-5 w-5 shrink-0" />}
+                <span className={clsx('flex h-7 w-7 items-center justify-center rounded-lg', isSuratActive ? dokumenColor.color : 'bg-slate-100 dark:bg-slate-700')}>
+                  {isSuratActive
+                    ? <DocumentCheckSolid className="h-4 w-4 text-white" />
+                    : <DocumentCheckIcon className="h-4 w-4 text-slate-500 dark:text-slate-400" />}
+                </span>
                 <span className="pointer-events-none absolute left-14 z-50 whitespace-nowrap rounded-lg bg-slate-800 px-2.5 py-1 text-xs font-medium text-slate-100 opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
                   Dokumen
                 </span>
@@ -136,19 +204,23 @@ export function DashboardSidebar() {
               <button
                 onClick={() => setSuratOpen(v => !v)}
                 className={clsx(
-                  'flex h-10 w-full items-center gap-3 rounded-xl px-3 transition-colors',
-                  isSuratActive
-                    ? 'text-indigo-600 dark:text-indigo-400'
-                    : 'text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200'
+                  'flex h-10 w-full items-center gap-3 rounded-xl px-2 transition-colors',
+                  isSuratActive ? `${dokumenColor.colorLight} dark:bg-opacity-20` : 'hover:bg-slate-50 dark:hover:bg-slate-800'
                 )}
               >
-                {isSuratActive ? <DocumentCheckSolid className="h-5 w-5 shrink-0" /> : <DocumentCheckIcon className="h-5 w-5 shrink-0" />}
-                <span className="flex-1 text-left text-sm font-medium">Dokumen</span>
-                <ChevronDownIcon className={clsx('h-3.5 w-3.5 transition-transform duration-200', suratOpen ? 'rotate-180' : '')} />
+                <span className={clsx('flex h-7 w-7 shrink-0 items-center justify-center rounded-lg', isSuratActive ? dokumenColor.color : 'bg-slate-100 dark:bg-slate-700')}>
+                  {isSuratActive
+                    ? <DocumentCheckSolid className="h-4 w-4 text-white" />
+                    : <DocumentCheckIcon className="h-4 w-4 text-slate-500 dark:text-slate-400" />}
+                </span>
+                <span className={clsx('flex-1 text-left text-sm font-medium', isSuratActive ? dokumenColor.activeText : 'text-slate-600 dark:text-slate-300')}>
+                  Dokumen
+                </span>
+                <ChevronDownIcon className={clsx('h-3.5 w-3.5 text-slate-400 transition-transform duration-200', suratOpen ? 'rotate-180' : '')} />
               </button>
 
               {suratOpen && (
-                <div className="ml-8 mt-0.5 flex flex-col gap-0.5">
+                <div className="ml-9 mt-0.5 flex flex-col gap-0.5">
                   {SURAT_CHILDREN.map(child => {
                     const isActive = pathname === child.href
                     return (
@@ -158,11 +230,11 @@ export function DashboardSidebar() {
                         className={clsx(
                           'flex h-8 items-center rounded-lg px-3 text-xs font-medium transition-colors',
                           isActive
-                            ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400'
-                            : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-300'
+                            ? 'bg-pink-50 text-pink-600 dark:bg-pink-900/20 dark:text-pink-400'
+                            : 'text-slate-400 hover:bg-slate-50 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-300'
                         )}
                       >
-                        <span className={clsx('mr-2 h-1 w-1 rounded-full', isActive ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-600')} />
+                        <span className={clsx('mr-2 h-1.5 w-1.5 rounded-full', isActive ? 'bg-pink-500' : 'bg-slate-300 dark:bg-slate-600')} />
                         {child.label}
                       </Link>
                     )
@@ -172,7 +244,6 @@ export function DashboardSidebar() {
             </div>
           )}
 
-          {/* Perpanjangan, Laporan, Pegawai */}
           {navItems.slice(3).map((item) => {
             const isActive = pathname === item.href
             const Icon = isActive ? item.iconActive : item.icon
@@ -183,43 +254,32 @@ export function DashboardSidebar() {
                 title={collapsed ? item.label : undefined}
                 className={clsx(
                   'group relative flex h-10 items-center rounded-xl transition-colors',
-                  collapsed ? 'w-10 justify-center' : 'w-full gap-3 px-3',
+                  collapsed ? 'w-10 justify-center' : 'w-full gap-3 px-2',
                   isActive
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200'
+                    ? `${item.colorLight} dark:bg-opacity-20`
+                    : 'hover:bg-slate-50 dark:hover:bg-slate-800'
                 )}
               >
-                <Icon className="h-5 w-5 shrink-0" />
+                <span className={clsx(
+                  'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg',
+                  isActive ? item.color : 'bg-slate-100 dark:bg-slate-700'
+                )}>
+                  <Icon className={clsx('h-4 w-4', isActive ? 'text-white' : 'text-slate-500 dark:text-slate-400')} />
+                </span>
                 {collapsed ? (
                   <span className="pointer-events-none absolute left-14 z-50 whitespace-nowrap rounded-lg bg-slate-800 px-2.5 py-1 text-xs font-medium text-slate-100 opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
                     {item.label}
                   </span>
                 ) : (
-                  <span className="text-sm font-medium">{item.label}</span>
+                  <span className={clsx('text-sm font-medium', isActive ? item.activeText : 'text-slate-600 dark:text-slate-300')}>
+                    {item.label}
+                  </span>
                 )}
               </Link>
             )
           })}
         </nav>
 
-        {/* Bottom: collapse toggle */}
-        <div className={clsx('flex flex-col gap-1', collapsed ? 'items-center' : 'px-3')}>
-          {/* Collapse toggle */}
-          <button
-            onClick={() => setCollapsed(v => !v)}
-            title={collapsed ? 'Perluas sidebar' : 'Ciutkan sidebar'}
-            className={clsx(
-              'flex h-10 items-center rounded-xl text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200',
-              collapsed ? 'w-10 justify-center' : 'w-full gap-3 px-3'
-            )}
-          >
-            {collapsed ? (
-              <ChevronRightIcon className="h-4 w-4" />
-            ) : (
-              <ChevronLeftIcon className="h-4 w-4 shrink-0" />
-            )}
-          </button>
-        </div>
       </aside>
 
       {/* Mobile bottom navigation */}
@@ -233,7 +293,7 @@ export function DashboardSidebar() {
               href={item.href}
               className={clsx(
                 'flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 transition-colors',
-                isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-500'
+                isActive ? item.color : 'text-slate-400 dark:text-slate-500'
               )}
             >
               <Icon className="h-5 w-5" />

@@ -22,6 +22,7 @@ const PAGE_LABELS: Record<string, string> = {
   '/laporan': 'Laporan Pengajuan',
   '/pegawai': 'Manajemen Pegawai',
   '/hukdis':  'Hukuman Disiplin',
+  '/pwk':     'Pindah Wilayah Kerja',
   '/sk': 'Surat Keputusan',
   '/surat/rekomendasi': 'Surat Rekomendasi',
   '/surat/sertifikat': 'Sertifikat',
@@ -77,8 +78,8 @@ export function DashboardTopbar() {
           {open && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-              <div className="absolute right-0 z-50 mt-2 w-52 rounded-xl border border-slate-100 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-900">
-                <div className="border-b border-slate-100 px-4 py-3 dark:border-slate-700">
+              <div className="absolute right-0 z-50 mt-2 w-52 rounded-xl bg-white py-1 dark:bg-slate-900">
+                <div className="px-4 py-3">
                   <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">{nama}</p>
                   {nip && <p className="mt-0.5 text-[10px] text-slate-400">NIP {nip}</p>}
                 </div>
