@@ -111,10 +111,10 @@ export function StatsCards() {
               key="sheet"
               initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 280 }}
-              className="fixed right-0 top-0 z-50 flex h-full w-full flex-col bg-white dark:bg-slate-900"
+              className="fixed right-0 top-0 z-50 flex h-full w-full flex-col border-l border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-900"
             >
               {/* Header */}
-              <div className="flex items-center justify-between px-5 py-4">
+              <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 dark:border-slate-700">
                 <div>
                   <h3 className="font-semibold text-slate-800 dark:text-slate-100">{LABEL[active]}</h3>
                   <p className="mt-0.5 text-xs text-slate-400">{items.length} data pengajuan</p>
@@ -129,7 +129,7 @@ export function StatsCards() {
                 {items.length === 0 ? (
                   <p className="py-10 text-center text-sm text-slate-400">Tidak ada data</p>
                 ) : items.map(item => (
-                  <div key={item.id} className="rounded-xl px-4 py-3.5">
+                  <div key={item.id} className="rounded-xl border border-slate-100 px-4 py-3.5 dark:border-slate-700">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         <p className="text-xs font-mono text-slate-400">{item.kode}</p>
